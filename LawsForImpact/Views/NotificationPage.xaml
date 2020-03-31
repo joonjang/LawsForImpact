@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="LawsForImpact.Views.NotificationPage"
+             xmlns:vm="clr-namespace:LawsForImpact.ViewModels"
+             Title="{Binding Title}">
+    
+    <ContentPage.BindingContext>
+        <vm:NotificationViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout>
+        <Grid VerticalOptions="FillAndExpand" Padding="25,40,25,30" RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+    
+            <Grid Grid.Row="1">
+                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                    <Label Text="SET TIME" HorizontalOptions="StartAndExpand" FontSize="15" TextColor="Black" VerticalOptions="Center"/>
+                    <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SelectedTime}" TextColor="Black" BackgroundColor="Transparent" Format="t"/>
+                </StackLayout>
+            </Grid>
+            <Grid Grid.Row="2">
+                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                    <Label Text="SET DATE" TextColor="Black" FontSize="15" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
+                    <DatePicker HorizontalOptions="EndAndExpand" Date="{Binding SelectedDate}" TextColor="Black"  BackgroundColor="Transparent" Format="MM-dd-yyyy"/>
+                </StackLayout>
+            </Grid>
+            <Grid Grid.Row="4">
+                <Button Text="Save" Command="{Binding SaveCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
+            </Grid>
+
+
+        </Grid>
+        <Button Text="Create Notification"
+                HorizontalOptions="Center"
+                VerticalOptions="Start"
+                Clicked="OnScheduleClick"/>
+        <Button Text="Laws"
+                HorizontalOptions="Center"
+                VerticalOptions="Start"
+                Clicked="Button_Clicked"/>
+    </StackLayout>
+
+</ContentPage>
