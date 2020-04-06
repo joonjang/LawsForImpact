@@ -22,6 +22,7 @@ namespace LawsForImpact.Droid
     public class AndroidSQLite : ISQLite
     {
         // Gets ths data from Assets
+        [Obsolete]
         async Task<SQLiteConnection> ISQLite.GetConnection()
         {
 

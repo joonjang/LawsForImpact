@@ -25,11 +25,13 @@ namespace LawsForImpact.Views
         {
             if (ItemsListView.SelectedItem != null)
             {
+                //determines globally what the notification topic chosen was
+                var x = e.SelectedItem as Item;
+                Global.selectedTitle = x.Text;
+
                 await Navigation.PushAsync(new NotificationPage());
-                // NEXT TASK, MAKE IT SEND DATA OF WHAT DATABASE IT SENT
-                // CONNECT DYNAMIC DATABASE STRING TO NOTIFICATIONPAGE
-                // ESSKEETIT
-                //  add detail under title of whether notification turned off or on, what day, etcs
+
+                // Todo  add detail under title of whether notification turned off or on, what day, etcs
                 ItemsListView.SelectedItem = null;
             }
         }

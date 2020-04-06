@@ -14,12 +14,12 @@ namespace LawsForImpact.Services
         {
             items = new List<Item>()
             {
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Law of Power", Description="The 48 laws" },
                 new Item { Id = Guid.NewGuid().ToString(), Text = "Personal", Description="User input info" },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Third item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Fifth item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Sixth item", Description="This is an item description." }
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Power", Description="The 48 Laws of Power" },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "War", Description="The 33 Laws of War" },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Mastery", Description="The Principles of Mastery" },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Friends", Description="How to Win Friends and Influence Others" },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Human", Description="Laws of Human Dynamics." }
             };
         }
 

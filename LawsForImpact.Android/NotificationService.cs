@@ -30,7 +30,7 @@ namespace LawsForImpact.Droid
 
         public void LocalNotification(string title, string body, int id, DateTime notifyTime)
         {
-
+            // Todo change the repeated length
             //long repeateDay = 1000 * 60 * 60 * 24;    
             long repeateForMinute = 60000; // In milliseconds   
             long totalMilliSeconds = (long)(notifyTime.ToUniversalTime() - _jan1st1970).TotalMilliseconds;
@@ -63,7 +63,8 @@ namespace LawsForImpact.Droid
 
             var pendingIntent = PendingIntent.GetBroadcast(Application.Context, Convert.ToInt32(_randomNumber), intent, PendingIntentFlags.Immutable);
             var alarmManager = GetAlarmManager();
-            alarmManager.SetRepeating(AlarmType.RtcWakeup, totalMilliSeconds, repeateForMinute, pendingIntent);
+            //totalMilliSeconds, repeateForMinute
+            alarmManager.SetRepeating(AlarmType.RtcWakeup, 1, 1, pendingIntent);
         }
 
         public void Cancel(int id)
@@ -118,7 +119,7 @@ namespace LawsForImpact.Droid
     {
 
         public const string LocalNotificationKey = "LocalNotification";
-
+        int notificationNumber = -1;
         const string channelId = "default";
         const string channelName = "Default";
         const string channelDescription = "The default channel for notifications.";
@@ -128,23 +129,49 @@ namespace LawsForImpact.Droid
         public const string MessageKey = "message";
 
         bool channelInitialized = false;
-        int messageId = -1;
         NotificationManager manager;
         NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
 
 
-
-
-        List<Power> globalList;
         private SQLiteConnection _sqLiteConnection;
+        int ruleIndex;
+        string titleIndex;
+        string title;
+        string message;
 
         private async void RefreshListView()
         {
             try
             {
-                _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                var listData = _sqLiteConnection.Table<Power>().ToList();
-                globalList = listData;
+                // where the cooridination of which title to use
+                // TODO how notifications come out
+                switch (Global.selectedTitle)
+                {
+                    case "Power":
+                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                        var listDataPower = _sqLiteConnection.Table<Power>().ToList();
+                        ruleIndex = listDataPower[Global.count].Law;
+                        titleIndex = listDataPower[Global.count].Title;
+                        title = $"Law {ruleIndex}";
+                        message = titleIndex; 
+                        break;
+                    //case "Principles of Mastery":
+                    //    _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                    //    var listDataMastery = _sqLiteConnection.Table<Mastery>().ToList();
+                    //    ruleIndex = listDataMastery[Global.count].Law;
+                    //    titleIndex = listDataMastery[Global.count].Title;
+                    //    title = $"Principle {ruleIndex}";
+                    //    message = titleIndex;
+                    //    break;
+                    //case "Law of War":
+                    //    _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                    //    var listDataWar = _sqLiteConnection.Table<War>().ToList();
+                    //    ruleIndex = listDataWar[Global.count].Law;
+                    //    titleIndex = listDataWar[Global.count].Title;
+                    //    title = $"Law {ruleIndex}";
+                    //    message = titleIndex;
+                    //    break;
+                }
             }
             catch (System.Exception e)
             {
@@ -152,7 +179,7 @@ namespace LawsForImpact.Droid
             }
 
         }
-        int notificationNumber = -1;
+        
 
         public override void OnReceive(Context context, Intent intent)
         {
@@ -162,22 +189,18 @@ namespace LawsForImpact.Droid
             }
             //RefreshListView(); // i deleted this and thats where it all went wrong
             // turns out it was from a switch statement in the ItemsPage
-            messageId++;
 
+            // TODO issue is the count keeps going up and doesnt restart
+            Global.count++;
 
-
-
+            RefreshListView();
 
             var extra = intent.GetStringExtra(LocalNotificationKey);
             var notification = DeserializeNotification(extra);
             //Generating notification    
-
             notificationNumber++;
-            var lawNumber = globalList[notificationNumber].Law;
-            var lawTitle = globalList[notificationNumber].Title;
 
-            string title = $"Law {lawNumber}";
-            string message = lawTitle;
+            
 
             textStyle.BigText(message);
 

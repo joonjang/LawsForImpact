@@ -21,7 +21,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-    
+
             <Grid Grid.Row="1">
                 <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
                     <Label Text="SET TIME" HorizontalOptions="StartAndExpand" FontSize="15" TextColor="Black" VerticalOptions="Center"/>
@@ -40,14 +40,7 @@
 
 
         </Grid>
-        <Button Text="Create Notification"
-                HorizontalOptions="Center"
-                VerticalOptions="Start"
-                Clicked="OnScheduleClick"/>
-        <Button Text="Laws"
-                HorizontalOptions="Center"
-                VerticalOptions="Start"
-                Clicked="Button_Clicked"/>
+
     </StackLayout>
 
 </ContentPage>

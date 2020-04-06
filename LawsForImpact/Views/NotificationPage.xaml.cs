@@ -16,8 +16,7 @@ namespace LawsForImpact.Views
 
     public partial class NotificationPage : ContentPage
     {
-		int notificationNumber = -1;
-
+		INotificationManager notificationManager;
 		public NotificationPage()
         {
 			BindingContext = new NotificationViewModel();
@@ -27,65 +26,13 @@ namespace LawsForImpact.Views
 			notificationManager.NotificationReceived += (sender, eventArgs) =>
 			{
 				var evtData = (NotificationEventArgs)eventArgs;
-				ShowNotification(evtData.Title, evtData.Message);
 			};
 		}
-
-		INotificationManager notificationManager;
-		
-
-		private SQLiteConnection _sqLiteConnection;
-
 
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			RefreshListView();
 		}
 
-		List<Power> globalList;
-		private async void RefreshListView()
-		{
-			try
-			{
-				_sqLiteConnection = await DependencyService.Get<ISQLite>().GetConnection();
-				var listData = _sqLiteConnection.Table<Power>().ToList();
-				globalList = listData;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e);
-			}
-
-		}
-
-		void OnScheduleClick(object sender, EventArgs e)
-		{
-			notificationNumber++;
-			var lawNumber = globalList[notificationNumber].Law; // fix this
-			var lawTitle = globalList[notificationNumber].Title;
-
-			string title = $"Law {lawNumber}";
-			string message = lawTitle;
-			notificationManager.ScheduleNotification(title, message);
-		}
-
-		void ShowNotification(string title, string message)
-		{
-			Device.BeginInvokeOnMainThread(() =>
-			{
-				var msg = new Label()
-				{
-					Text = $"Notification Received:\nTitle: {title}\nMessage: {message}"
-				};
-
-			});
-		}
-
-		private async void Button_Clicked(object sender, EventArgs e)
-		{
-
-			await Navigation.PushAsync(new MainPage());
-		}
 	}
 }

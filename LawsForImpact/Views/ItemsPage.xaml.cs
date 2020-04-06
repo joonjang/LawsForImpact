@@ -32,13 +32,9 @@ namespace LawsForImpact.Views
             if (ItemsListView.SelectedItem != null)
             {
                 var item = args.SelectedItem as Item;
-                switch (item.Text)
-                {
-                    case "Law of Power":
-                        await Navigation.PushAsync(new PowerPage());
-                        break;
-
-                }
+                Global.selectedTitle = item.Text;
+                Global.selectedDescription = item.Description;
+                await Navigation.PushAsync(new PowerPage());
                 //if (item == null)
                 //    return;
 

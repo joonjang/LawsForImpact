@@ -5,8 +5,8 @@ using System.Text;
 
 namespace LawsForImpact.Models
 {
-    [Table("Power")]
-    public class Power
+    [Table("User")]
+    public class User
     {
         [PrimaryKey]
         public int Law { get; set; }

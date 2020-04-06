@@ -5,13 +5,12 @@ using System.Text;
 
 namespace LawsForImpact.Models
 {
-    [Table("Power")]
-    public class Power
+    [Table("Mastery")]
+    public class Mastery
     {
         [PrimaryKey]
         public int Law { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        
     }
 }
