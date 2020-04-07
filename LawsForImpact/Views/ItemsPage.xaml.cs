@@ -35,6 +35,7 @@ namespace LawsForImpact.Views
                 Global.selectedTitle = item.Text;
                 Global.selectedDescription = item.Description;
                 await Navigation.PushAsync(new PowerPage());
+
                 //if (item == null)
                 //    return;
 

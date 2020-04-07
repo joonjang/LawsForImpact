@@ -26,8 +26,8 @@ namespace LawsForImpact.Views
             if (ItemsListView.SelectedItem != null)
             {
                 //determines globally what the notification topic chosen was
-                var x = e.SelectedItem as Item;
-                Global.selectedTitle = x.Text;
+                var item = e.SelectedItem as Item;
+                Global.notifTitle = item.Text;
 
                 await Navigation.PushAsync(new NotificationPage());
 

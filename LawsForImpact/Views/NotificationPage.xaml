@@ -21,24 +21,49 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <Label Text="{Binding HeaderTitle,  StringFormat='Notifications for {0}'}" HorizontalTextAlignment="Center" FontSize="20" FontAttributes="Bold"/>
 
+            
             <Grid Grid.Row="1">
-                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
-                    <Label Text="SET TIME" HorizontalOptions="StartAndExpand" FontSize="15" TextColor="Black" VerticalOptions="Center"/>
-                    <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SelectedTime}" TextColor="Black" BackgroundColor="Transparent" Format="t"/>
-                </StackLayout>
-            </Grid>
-            <Grid Grid.Row="2">
-                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
-                    <Label Text="SET DATE" TextColor="Black" FontSize="15" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
-                    <DatePicker HorizontalOptions="EndAndExpand" Date="{Binding SelectedDate}" TextColor="Black"  BackgroundColor="Transparent" Format="MM-dd-yyyy"/>
+                <StackLayout>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        
+                        <Label Text="Everyday" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                        <Switch IsToggled="{Binding EverydayToggle}" HorizontalOptions="EndAndExpand"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                        <Label Text="Every other day" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                        <Switch IsToggled="{Binding OtherDayToggle}" HorizontalOptions="EndAndExpand"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                        <Label Text="Once a week" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                        <Switch IsToggled="{Binding WeeklyToggle}" HorizontalOptions="EndAndExpand"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                        <Label Text="Once a month" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                        <Switch IsToggled="{Binding MonthlyToggle}" HorizontalOptions="EndAndExpand"/>
+                    </StackLayout>
                 </StackLayout>
             </Grid>
             <Grid Grid.Row="4">
                 <Button Text="Save" Command="{Binding SaveCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
             </Grid>
 
-
+            <Grid Grid.Row="2">
+                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                    <Label Text="SET TIME" HorizontalOptions="StartAndExpand" FontSize="15" TextColor="Black" VerticalOptions="Center"/>
+                    <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SelectedTime}" TextColor="Black" BackgroundColor="Transparent" Format="t"/>
+                </StackLayout>
+            </Grid>
+            <Grid Grid.Row="3">
+                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal" IsVisible="{Binding ShowDate}">
+                    <Label Text="SET DATE" TextColor="Black" FontSize="15" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
+                    <DatePicker HorizontalOptions="EndAndExpand" Date="{Binding SelectedDate}" TextColor="Black"  BackgroundColor="Transparent" Format="MM-dd-yyyy"/>
+                </StackLayout>
+            </Grid>
         </Grid>
 
     </StackLayout>

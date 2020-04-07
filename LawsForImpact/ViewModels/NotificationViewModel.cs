@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Globalization;
+using LawsForImpact.Models;
 
 namespace LawsForImpact.ViewModels
 {
@@ -17,6 +18,18 @@ namespace LawsForImpact.ViewModels
             SaveCommand = new Command(() => SaveLocalNotification());
             Title = "Notification";
             OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
+            HeaderTitle = Global.notifTitle;
+        }
+
+        private string headerTitle;
+        public string HeaderTitle
+        {
+            get { return headerTitle; }
+            set
+            {
+                headerTitle = value;
+                OnPropertyChanged(nameof(HeaderTitle));
+            }
         }
 
         public ICommand OpenWebCommand { get; }
@@ -71,6 +84,125 @@ namespace LawsForImpact.ViewModels
                 App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
 
         }
+        // todo go over why this works
+        private bool everydayToggle;
+        public bool EverydayToggle
+        {
+            get => everydayToggle;
+            set
+            {
+
+                SetProperty(ref everydayToggle, value, nameof(EverydayToggle));
+
+                if (value)
+                {
+                    OtherDayToggle = false;
+                    WeeklyToggle = false;
+                    MonthlyToggle = false;
+
+                }
+            }
+        }
+
+        // todo find out how this value parameter works
+        private bool showDate;
+        public bool ShowDate
+        {
+            get => showDate;
+            set
+            {
+                SetProperty(ref showDate, value, nameof(ShowDate));
+            }
+        }
+
+        private bool otherDayToggle;
+        public bool OtherDayToggle
+        {
+            get => otherDayToggle;
+            set
+            {
+                SetProperty(ref otherDayToggle, value, nameof(OtherDayToggle));
+
+                if (value)
+                {
+                    EverydayToggle = false;
+                    WeeklyToggle = false;
+                    MonthlyToggle = false;
+                    ShowDate = true;
+                    
+                }
+                else
+                {
+                    ShowDate = false;
+                }
+            }
+        }
+
+        private bool weeklyToggle;
+        public bool WeeklyToggle
+        {
+            get => weeklyToggle;
+            set
+            {
+
+                SetProperty(ref weeklyToggle, value, nameof(WeeklyToggle));
+                if (value)
+                {
+                    EverydayToggle = false;
+                    OtherDayToggle = false;
+                    MonthlyToggle = false;
+                    ShowDate = true;
+
+                }
+                else
+                {
+                    ShowDate = false;
+                }
+            }
+        }
+
+        private bool monthlyToggle;
+        public bool MonthlyToggle
+        {
+            get => monthlyToggle;
+            set
+            {
+
+                SetProperty(ref monthlyToggle, value, nameof(MonthlyToggle));
+                if (value)
+                {
+                    EverydayToggle = false;
+                    OtherDayToggle = false;
+                    WeeklyToggle = false;
+                    ShowDate = true;
+
+                }
+                else
+                {
+                    ShowDate = false;
+                }
+            }
+        }
+
+
+        //private bool selectAll;
+        //public bool SelectAll
+        //{
+        //    get => selectAll;
+        //    set
+        //    {
+        //        SetProperty(ref selectAll, value, nameof(SelectAll));
+
+        //        if (value)
+        //        {
+        //            Option1 = true;
+        //            Option2 = true;
+        //            Option3 = true;
+        //            Option4 = true;
+        //        }
+        //    }
+        //}
+
         //protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string propertyName = "", Action onChanged = null)
         //{
         //    if (EqualityComparer<T>.Default.Equals(backingStore, value))

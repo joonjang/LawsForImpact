@@ -18,30 +18,19 @@ namespace LawsForImpact.Views
 	{ 
 
 		private SQLiteConnection _sqLiteConnection;
-		// TODO hookk up the headerTitle with xaml
-		// look at how MyListView is binded
-		// use the MockData info instead
-		private string headerTitle;
-		public string HeaderTitle
-		{
-			get { return headerTitle; }
-			set
-			{
-				headerTitle = value;
-				OnPropertyChanged(nameof(HeaderTitle));
-			}
-		}
+
+		
 
 		public PowerPage()
 		{
 
 			InitializeComponent();
 			// BindingContext hooks xaml binding to this class
-			BindingContext = this;
+			BindingContext = new PowerViewModel();
 			// sets Global.selectDescription to headerTitle through HeaderTitle
 			// needs to go through HeaderTitle to call OnPropertyChanged method 
 			// not too sure why OnPropertyChanged is required but it makes it work
-			HeaderTitle = Global.selectedDescription;
+			
 
 		}
 

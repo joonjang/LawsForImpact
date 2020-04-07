@@ -18,7 +18,7 @@ namespace LawsForImpact.Services
                 new Item { Id = Guid.NewGuid().ToString(), Text = "Power", Description="The 48 Laws of Power" },
                 new Item { Id = Guid.NewGuid().ToString(), Text = "War", Description="The 33 Laws of War" },
                 new Item { Id = Guid.NewGuid().ToString(), Text = "Mastery", Description="The Principles of Mastery" },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Friends", Description="How to Win Friends and Influence Others" },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Friends", Description="How to Win Friends and Influence People" },
                 new Item { Id = Guid.NewGuid().ToString(), Text = "Human", Description="Laws of Human Dynamics." }
             };
         }

@@ -28,11 +28,13 @@ namespace LawsForImpact.Views
 				var evtData = (NotificationEventArgs)eventArgs;
 			};
 		}
-
+		// todo make set time and date show based off check box chosen
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
 		}
+
+
 
 	}
 }
