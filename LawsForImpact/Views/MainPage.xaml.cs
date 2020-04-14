@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LawsForImpact.Models;
+using System;
 using System.ComponentModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,6 +14,12 @@ namespace LawsForImpact.Views
         public MainPage()
         {
             InitializeComponent();
+            //if (Global.notifTitle != null)
+            //{
+            //    Navigation.PushAsync(new ItemDetailPage());
+
+            //}
         }
+
     }
 }

@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using LawsForImpact.Services;
 using LawsForImpact.Views;
+using LawsForImpact.Models;
 
 namespace LawsForImpact
 {
@@ -15,6 +16,7 @@ namespace LawsForImpact
 
             DependencyService.Register<MockDataStore>();
             MainPage = new MainPage();
+
         }
 
         protected override void OnStart()

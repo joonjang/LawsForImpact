@@ -21,20 +21,26 @@ namespace LawsForImpact.Views
             BindingContext = viewModel = new ItemsViewModel();
         }
 
-        async void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (ItemsListView.SelectedItem != null)
             {
                 //determines globally what the notification topic chosen was
-                var item = e.SelectedItem as Item;
-                Global.notifTitle = item.Text;
 
-                await Navigation.PushAsync(new NotificationPage());
+                var item = e.SelectedItem as Item;
+                SendSelectedItem(item);
+                
+                
 
                 // Todo  add detail under title of whether notification turned off or on, what day, etcs
                 ItemsListView.SelectedItem = null;
             }
         }
+        private Item sendSelectedItem;
+        private void SendSelectedItem(Item item)
+        {
+             item = sendSelectedItem;
+        } 
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -42,5 +48,13 @@ namespace LawsForImpact.Views
             if (viewModel.Items.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
         }
+
+        private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            //Item itemReceived = sendSelectedItem;
+           
+            //Global.notifTitle = itemReceived.Text;
+        }
+
     }
 }

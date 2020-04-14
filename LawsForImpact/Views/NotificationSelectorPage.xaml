@@ -14,8 +14,8 @@
                 VerticalOptions="FillAndExpand"
                 HasUnevenRows="true"
                 RefreshCommand="{Binding LoadItemsCommand}"
-                IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                IsPullToRefreshEnabled="False"
+
                 CachingStrategy="RecycleElement">
                 <d:ListView.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
@@ -30,17 +30,78 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding Text}" 
+                            <StackLayout Padding="8" Orientation="Horizontal">
+                                <Label
+                                Text="{Binding Text}" 
                                 d:Text="{Binding .}"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
-                                FontSize="16" />
+                                FontSize="16"
+                                HorizontalOptions="StartAndExpand"/>
+                                <CheckBox  
+                                    HorizontalOptions="EndAndExpand" 
+                                    CheckedChanged="CheckBox_CheckedChanged"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                
             </ListView>
+            <StackLayout>
+                <Grid VerticalOptions="FillAndExpand" Padding="25,0,25,0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+
+
+                    <Grid Grid.Row="1">
+                        <StackLayout>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                                <Label Text="Everyday" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                                <Switch IsToggled="{Binding EverydayToggle}" HorizontalOptions="EndAndExpand"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                                <Label Text="Every other day" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                                <Switch IsToggled="{Binding OtherDayToggle}" HorizontalOptions="EndAndExpand"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                                <Label Text="Once a week" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                                <Switch IsToggled="{Binding WeeklyToggle}" HorizontalOptions="EndAndExpand"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                                <Label Text="Once a month" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                                <Switch IsToggled="{Binding MonthlyToggle}" HorizontalOptions="EndAndExpand"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Grid>
+                    <Grid Grid.Row="4">
+                        <Button Text="Save" Command="{Binding SaveCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                            <Label Text="SET TIME" HorizontalOptions="StartAndExpand" FontSize="15" TextColor="Black" VerticalOptions="Center"/>
+                            <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SelectedTime}" TextColor="Black" BackgroundColor="Transparent" Format="t"/>
+                        </StackLayout>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal" IsVisible="{Binding ShowDate}">
+                            <Label Text="SET DATE" TextColor="Black" FontSize="15" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
+                            <DatePicker HorizontalOptions="EndAndExpand" Date="{Binding SelectedDate}" TextColor="Black"  BackgroundColor="Transparent" Format="MM-dd-yyyy"/>
+                        </StackLayout>
+                    </Grid>
+                </Grid>
+
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

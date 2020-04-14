@@ -25,6 +25,8 @@ namespace LawsForImpact.Views
             InitializeComponent();
 
             BindingContext = viewModel = new ItemsViewModel();
+
+
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
@@ -47,10 +49,7 @@ namespace LawsForImpact.Views
 
         }
 
-        async void AddItem_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
-        }
+        
 
         protected override void OnAppearing()
         {

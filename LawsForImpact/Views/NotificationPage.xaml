@@ -11,20 +11,38 @@
     <ContentPage.BindingContext>
         <vm:NotificationViewModel />
     </ContentPage.BindingContext>
+    <ScrollView>
+    <StackLayout  Padding="25,40,25,30" >
 
-    <StackLayout>
-        <Grid VerticalOptions="FillAndExpand" Padding="25,40,25,30" RowSpacing="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Label Text="{Binding HeaderTitle,  StringFormat='Notifications for {0}'}" HorizontalTextAlignment="Center" FontSize="20" FontAttributes="Bold"/>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Personal Input" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                <CheckBox IsChecked="{Binding UserCheck}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Laws of Power" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                <CheckBox IsChecked="{Binding PowerCheck}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Laws of War" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                <CheckBox IsChecked="{Binding WarCheck}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Principles of Mastery" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                <CheckBox IsChecked="{Binding MasteryCheck}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Win Freinds and Influence People" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                <CheckBox IsChecked="{Binding FriendsCheck}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Laws of Human Dynamics" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                <CheckBox IsChecked="{Binding HumanCheck}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+        </StackLayout>
 
-            
-            <Grid Grid.Row="1">
+        <StackLayout Padding="0,20,0,0">
+        <Grid Grid.Row="1">
                 <StackLayout>
                     <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         
@@ -48,9 +66,7 @@
                     </StackLayout>
                 </StackLayout>
             </Grid>
-            <Grid Grid.Row="4">
-                <Button Text="Save" Command="{Binding SaveCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
-            </Grid>
+            
 
             <Grid Grid.Row="2">
                 <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
@@ -64,8 +80,11 @@
                     <DatePicker HorizontalOptions="EndAndExpand" Date="{Binding SelectedDate}" TextColor="Black"  BackgroundColor="Transparent" Format="MM-dd-yyyy"/>
                 </StackLayout>
             </Grid>
-        </Grid>
+            <Grid Grid.Row="4">
+                <Button Text="Save" Command="{Binding SaveCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
+            </Grid>
+        </StackLayout>
 
     </StackLayout>
-
+    </ScrollView>
 </ContentPage>

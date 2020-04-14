@@ -16,6 +16,7 @@ using Java.Lang;
 using LawsForImpact.Droid;
 using LawsForImpact.Models;
 using LawsForImpact.Services;
+using LawsForImpact.ViewModels;
 using SQLite;
 using AndroidApp = Android.App.Application;
 
@@ -30,13 +31,46 @@ namespace LawsForImpact.Droid
 
         public void LocalNotification(string title, string body, int id, DateTime notifyTime)
         {
-            // Todo change the repeated length
+            // !Todo change the repeated length, connect the notification interval switch with these
             //long repeateDay = 1000 * 60 * 60 * 24;    
-            long repeateForMinute = 60000; // In milliseconds   
-            long totalMilliSeconds = (long)(notifyTime.ToUniversalTime() - _jan1st1970).TotalMilliseconds;
-            if (totalMilliSeconds < JavaSystem.CurrentTimeMillis())
+            // long repeateForMinute = 60000; // In milliseconds  
+            var selectedInterval = new NotificationViewModel();
+            long selectedRepeat = 0;
+
+            // todo change to actual time, using 1ms for debugging
+            if (selectedInterval.EverydayToggle == true) 
             {
-                totalMilliSeconds = totalMilliSeconds + repeateForMinute;
+                selectedRepeat = 1;
+                // every 24 hr
+                //selectedRepeat = 1000 * 60 * 60 * 24;
+                //// this is one days worth 
+                //// 1000ms -> 1s*60 = 60s -> 1m*60=60m -> 1h*24=24h
+
+            }
+            else if(selectedInterval.OtherDayToggle == true)
+            {
+                selectedRepeat = 1;
+                //// every 48hr
+                //selectedRepeat = 1000 * 60 * 60 * 24 * 2; 
+            }
+            else if(selectedInterval.WeeklyToggle == true)
+            {
+                selectedRepeat = 1;
+                //// every 168hr -> 1 week
+                //selectedRepeat = 1000 * 60 * 60 * 24 * 7;
+            }
+            else if(selectedInterval.MonthlyToggle == true)
+            {
+                selectedRepeat = 1;
+                //// monthlys worth, 672 hrs, 28 days
+                //selectedRepeat = 2419200000;
+            }
+
+
+            long totalMilliSeconds = (long)(notifyTime.ToUniversalTime() - _jan1st1970).TotalMilliseconds;
+            if (totalMilliSeconds <JavaSystem.CurrentTimeMillis())
+            {
+                totalMilliSeconds = totalMilliSeconds + selectedRepeat;
             }
 
             var intent = CreateIntent(id);
@@ -63,6 +97,7 @@ namespace LawsForImpact.Droid
 
             var pendingIntent = PendingIntent.GetBroadcast(Application.Context, Convert.ToInt32(_randomNumber), intent, PendingIntentFlags.Immutable);
             var alarmManager = GetAlarmManager();
+            // todo change variable of alarm manager
             //totalMilliSeconds, repeateForMinute
             alarmManager.SetRepeating(AlarmType.RtcWakeup, 1, 1, pendingIntent);
         }
@@ -131,46 +166,143 @@ namespace LawsForImpact.Droid
         bool channelInitialized = false;
         NotificationManager manager;
         NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
+        Dictionary<string,int> nQueue = Global.notifQueue;
 
 
         private SQLiteConnection _sqLiteConnection;
-        int ruleIndex;
-        string titleIndex;
+        string ruleIndex;
         string title;
         string message;
 
+        // determine next notification
+        private int notifIterator(int elementMax)
+        {
+            //SOLVED: War skips exponentially
+            Global.whichElement++;
+            if (Global.whichElement >= nQueue.Count)
+            {
+                // if all elements have gone through once, starts back to first element
+                Global.whichElement = 0;
+            }
+
+
+            
+            // SOLVED: issue is elementMax and chosenElement dont align 
+
+            
+            string choseNotifElement = nQueue.ElementAt(Global.whichElement).Key;
+
+            // checks whether current table index overflows, resets to starting point if yes
+            if (nQueue[choseNotifElement] < 0)
+            {
+                nQueue[choseNotifElement] = elementMax - 1;
+            }
+
+            // next index chosen
+            int returnedIndex = elementMax - nQueue[choseNotifElement];
+            // todo figure out what happens when queue number reaches 0
+            nQueue[choseNotifElement] = nQueue[choseNotifElement] - 1;
+
+            // next notification table on the list
+            int nextNotifIndex = Global.whichElement + 1;
+            if (nextNotifIndex < nQueue.Count)
+            {
+                Global.notifTitle = nQueue.ElementAt(nextNotifIndex).Key;
+            }
+            else
+            {
+                Global.notifTitle = nQueue.ElementAt(0).Key;
+            }
+
+            
+
+            //todo restart the value count if zero is hit
+            return returnedIndex-1;
+
+        }
+        int iteratedIndex;
         private async void RefreshListView()
         {
             try
             {
                 // where the cooridination of which title to use
                 // TODO how notifications come out
-                switch (Global.selectedTitle)
+                switch (Global.notifTitle)
                 {
                     case "Power":
                         _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
                         var listDataPower = _sqLiteConnection.Table<Power>().ToList();
-                        ruleIndex = listDataPower[Global.count].Law;
-                        titleIndex = listDataPower[Global.count].Title;
-                        title = $"Law {ruleIndex}";
-                        message = titleIndex; 
+
+                        // inserts info of the max index count of table
+                         iteratedIndex = notifIterator(_sqLiteConnection.Table<Power>().Count());
+
+                        ruleIndex = $"Law {iteratedIndex + 1}";
+                        title = listDataPower[iteratedIndex].Title;
+                        message = listDataPower[iteratedIndex].Description;
+                        Global.notifDescription = title;
+                        Global.notifFullDescrip = message;
                         break;
-                    //case "Principles of Mastery":
-                    //    _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                    //    var listDataMastery = _sqLiteConnection.Table<Mastery>().ToList();
-                    //    ruleIndex = listDataMastery[Global.count].Law;
-                    //    titleIndex = listDataMastery[Global.count].Title;
-                    //    title = $"Principle {ruleIndex}";
-                    //    message = titleIndex;
-                    //    break;
-                    //case "Law of War":
-                    //    _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                    //    var listDataWar = _sqLiteConnection.Table<War>().ToList();
-                    //    ruleIndex = listDataWar[Global.count].Law;
-                    //    titleIndex = listDataWar[Global.count].Title;
-                    //    title = $"Law {ruleIndex}";
-                    //    message = titleIndex;
-                    //    break;
+                    case "Mastery":
+                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                        var listDataMastery = _sqLiteConnection.Table<Mastery>().ToList();
+
+                        // inserts info of the max index count of table
+                         iteratedIndex = notifIterator(_sqLiteConnection.Table<Mastery>().Count());
+
+                        ruleIndex = $"Principle {iteratedIndex + 1}";
+                        title = listDataMastery[iteratedIndex].Title;
+                        message = listDataMastery[iteratedIndex].Description;
+                        Global.notifDescription = title;
+                        Global.notifFullDescrip = message;
+                        break;
+                    case "War":
+                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                        var listDataWar = _sqLiteConnection.Table<War>().ToList();
+
+                        iteratedIndex = notifIterator(_sqLiteConnection.Table<War>().Count());
+
+                        ruleIndex = $"Law {iteratedIndex + 1}";
+                        title = listDataWar[iteratedIndex].Title;
+                        message = listDataWar[iteratedIndex].Description;
+                        Global.notifDescription = title;
+                        Global.notifFullDescrip = message;
+                        break;
+                    case "Friends":
+                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                        var listDataFriends = _sqLiteConnection.Table<Friends>().ToList();
+
+                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Friends>().Count());
+
+                        ruleIndex = $"Law {iteratedIndex + 1}";
+                        title = listDataFriends[iteratedIndex].Title;
+                        message = listDataFriends[iteratedIndex].Description;
+                        Global.notifDescription = title;
+                        Global.notifFullDescrip = message;
+                        break;
+                    case "Human":
+                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                        var listDataHuman = _sqLiteConnection.Table<Human>().ToList();
+
+                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Human>().Count());
+
+                        ruleIndex = $"Law {iteratedIndex + 1}";
+                        title = listDataHuman[iteratedIndex].Title;
+                        message = listDataHuman[iteratedIndex].Description;
+                        Global.notifDescription = title;
+                        Global.notifFullDescrip = message;
+                        break;
+                    case "User":
+                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+                        var listDataUser = _sqLiteConnection.Table<User>().ToList();
+
+                        iteratedIndex = notifIterator(_sqLiteConnection.Table<User>().Count());
+
+                        ruleIndex = $"Reminder {iteratedIndex + 1}";
+                        title = listDataUser[iteratedIndex].Title;
+                        message = listDataUser[iteratedIndex].Description;
+                        Global.notifDescription = title;
+                        Global.notifFullDescrip = message;
+                        break;
                 }
             }
             catch (System.Exception e)
@@ -189,6 +321,9 @@ namespace LawsForImpact.Droid
             }
             //RefreshListView(); // i deleted this and thats where it all went wrong
             // turns out it was from a switch statement in the ItemsPage
+
+            intent.SetFlags(ActivityFlags.SingleTop);
+            intent.PutExtra("OpenPage", "SomePage");
 
             // TODO issue is the count keeps going up and doesnt restart
             Global.count++;

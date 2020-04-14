@@ -67,8 +67,8 @@ namespace LawsForImpact.Droid
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.notify_panel_notification_icon_bg))
-                .SetSmallIcon(Resource.Drawable.notify_panel_notification_icon_bg)
+                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.xamarin_logo))
+                .SetSmallIcon(Resource.Drawable.xamarin_logo)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
                 .SetStyle(textStyle);
 

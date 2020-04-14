@@ -15,25 +15,28 @@ namespace LawsForImpact.Views
     {
         ItemDetailViewModel viewModel;
 
-        public ItemDetailPage(ItemDetailViewModel viewModel)
-        {
-            InitializeComponent();
-
-            BindingContext = this.viewModel = viewModel;
-        }
-
         public ItemDetailPage()
         {
+            // starting 'Today' page, loads up a random element from the database
             InitializeComponent();
+            
+            viewModel = new ItemDetailViewModel();
 
-            var item = new Item
+            viewModel.LawOrPrinciple = "";
+            viewModel.HeaderTitle = Global.notifDescription;
+            viewModel.HeaderDescription = Global.notifFullDescrip;
+            if (viewModel.HeaderTitle == null)
             {
-                Text = "Item 1",
-                Description = "This is an item description."
-            };
+                viewModel.LoadData();
+            }
+            
 
-            viewModel = new ItemDetailViewModel(item);
             BindingContext = viewModel;
+        }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            viewModel.LoadData();
         }
     }
 }

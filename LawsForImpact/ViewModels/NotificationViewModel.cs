@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Globalization;
 using LawsForImpact.Models;
+using System.Linq;
 
 namespace LawsForImpact.ViewModels
 {
@@ -74,14 +75,14 @@ namespace LawsForImpact.ViewModels
 
         void SaveLocalNotification()
         {
-                var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
-                var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
-                var dateTime = date + " " + time;
-                var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
+            var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
+            var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
+            var dateTime = date + " " + time;
+            var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
-                DependencyService.Get<INotificationService>().Cancel(0);
-                DependencyService.Get<INotificationService>().LocalNotification("Local Notification", "BODY MESSAGE", 0, selectedDateTime);
-                App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
+            DependencyService.Get<INotificationService>().Cancel(0);
+            DependencyService.Get<INotificationService>().LocalNotification("Local Notification", "BODY MESSAGE", 0, selectedDateTime);
+            App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
 
         }
         // todo go over why this works
@@ -129,7 +130,7 @@ namespace LawsForImpact.ViewModels
                     WeeklyToggle = false;
                     MonthlyToggle = false;
                     ShowDate = true;
-                    
+
                 }
                 else
                 {
@@ -184,42 +185,133 @@ namespace LawsForImpact.ViewModels
             }
         }
 
+        Dictionary<string, int> nQueue = Global.notifQueue;
 
-        //private bool selectAll;
-        //public bool SelectAll
-        //{
-        //    get => selectAll;
-        //    set
-        //    {
-        //        SetProperty(ref selectAll, value, nameof(SelectAll));
+        private void setNotifTitle()
+        {
+            Global.notifTitle = nQueue.ElementAt(0).Key;
+        }
 
-        //        if (value)
-        //        {
-        //            Option1 = true;
-        //            Option2 = true;
-        //            Option3 = true;
-        //            Option4 = true;
-        //        }
-        //    }
-        //}
+        private bool userCheck;
+        public bool UserCheck
+        {
+            get => userCheck;
+            set
+            {
+                SetProperty(ref userCheck, value, nameof(UserCheck));
+                if (value)
+                {
+                    nQueue.Add("User", 1);
+                    setNotifTitle();
+                }
+                else
+                {
+                    nQueue.Remove("User");
+                    setNotifTitle();
+                }
 
-        //protected bool SetProperty<T>(ref T backingStore, T value, [CallerMemberName] string propertyName = "", Action onChanged = null)
-        //{
-        //    if (EqualityComparer<T>.Default.Equals(backingStore, value))
-        //        return false;
-        //    backingStore = value;
-        //    onChanged?.Invoke();
-        //    OnPropertyChanged(propertyName);
-        //    return true;
-        //}
-        // Todo modify this, its a hidden method
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        //{
-        //    var changed = PropertyChanged;
-        //    if (changed == null)
-        //        return;
-        //    changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
+            }
+        }
+
+        private bool powerCheck;
+        public bool PowerCheck
+        {
+            get => powerCheck;
+            set
+            {
+                SetProperty(ref powerCheck, value, nameof(PowerCheck));
+                if (value)
+                {
+                    nQueue.Add("Power", 47);
+                    setNotifTitle();
+                }
+                else
+                {
+                    nQueue.Remove("Power");
+                    setNotifTitle();
+                }
+            }
+        }
+
+        private bool warCheck;
+        public bool WarCheck
+        {
+            get => warCheck;
+            set
+            {
+                SetProperty(ref warCheck, value, nameof(WarCheck));
+                if (value)
+                {
+                    nQueue.Add("War", 32);
+                    setNotifTitle();
+                }
+                else
+                {
+                    nQueue.Remove("War");
+                    setNotifTitle();
+                }
+            }
+        }
+
+        private bool masteryCheck;
+        public bool MasteryCheck
+        {
+            get => masteryCheck;
+            set
+            {
+                SetProperty(ref masteryCheck, value, nameof(MasteryCheck));
+                if (value)
+                {
+                    nQueue.Add("Mastery", 17);
+                    setNotifTitle();
+                }
+                else
+                {
+                    nQueue.Remove("Mastery");
+                    setNotifTitle();
+                }
+            }
+        }
+
+        private bool friendsCheck;
+        public bool FriendsCheck
+        {
+            get => friendsCheck;
+            set
+            {
+                SetProperty(ref friendsCheck, value, nameof(FriendsCheck));
+                if (value)
+                {
+                    nQueue.Add("Friends", 29);
+                    setNotifTitle();
+                }
+                else
+                {
+                    nQueue.Remove("Friends");
+                    setNotifTitle();
+                }
+            }
+        }
+
+        private bool humanCheck;
+        public bool HumanCheck
+        {
+            get => humanCheck;
+            set
+            {
+                SetProperty(ref humanCheck, value, nameof(HumanCheck));
+                if (value)
+                {
+                    nQueue.Add("Human", 17);
+                    setNotifTitle();
+                }
+                else
+                {
+                    nQueue.Remove("Human");
+                    setNotifTitle();
+                }
+            }
+        }
+
     }
 }

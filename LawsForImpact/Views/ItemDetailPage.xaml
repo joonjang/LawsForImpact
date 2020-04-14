@@ -7,11 +7,20 @@
              x:Class="LawsForImpact.Views.ItemDetailPage"
              Title="{Binding Title}">
 
+    <ScrollView>
     <StackLayout Spacing="20" Padding="15">
-        <Label Text="Text:" FontSize="Medium" />
-        <Label Text="{Binding Item.Text}" d:Text="Item name" FontSize="Small"/>
-        <Label Text="Description:" FontSize="Medium" />
-        <Label Text="{Binding Item.Description}" d:Text="Item description" FontSize="Small"/>
+        
+        <Label Text="{Binding LawOrPrinciple}" 
+               d:Text="Rule or Law" 
+               HorizontalOptions="CenterAndExpand" 
+               FontSize="20" 
+               FontAttributes="Bold,Italic" />
+        <Label Text="{Binding HeaderTitle}" d:Text="Item name" FontAttributes="Bold"/>
+        <Label Text="{Binding HeaderDescription}" d:Text="Item description"/>
+        <Button VerticalOptions="EndAndExpand" Text="Refresh" Clicked="Button_Clicked"/>
+        
     </StackLayout>
-    
+    </ScrollView>
+
+
 </ContentPage>
