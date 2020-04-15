@@ -12,14 +12,22 @@ using System.Linq;
 
 namespace LawsForImpact.ViewModels
 {
+    // todo make save show up only once iteration is pressed
     public class NotificationViewModel : BaseViewModel
     {
+        Dictionary<string, int> nQueue = Global.notifQueue;
         public NotificationViewModel()
         {
             SaveCommand = new Command(() => SaveLocalNotification());
             Title = "Notification";
             OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
             HeaderTitle = Global.notifTitle;
+            userCheck = Preferences.Get("User", false);
+            powerCheck = Preferences.Get("Power", false);
+            warCheck = Preferences.Get("War", false);
+            masteryCheck = Preferences.Get("Mastery", false);
+            friendsCheck = Preferences.Get("Friends", false);
+            humanCheck = Preferences.Get("Human", false);
         }
 
         private string headerTitle;
@@ -94,7 +102,7 @@ namespace LawsForImpact.ViewModels
             {
 
                 SetProperty(ref everydayToggle, value, nameof(EverydayToggle));
-
+                
                 if (value)
                 {
                     OtherDayToggle = false;
@@ -185,11 +193,21 @@ namespace LawsForImpact.ViewModels
             }
         }
 
-        Dictionary<string, int> nQueue = Global.notifQueue;
+        
 
         private void setNotifTitle()
         {
-            Global.notifTitle = nQueue.ElementAt(0).Key;
+            // todo gets called by Preference every start up, check to see that index continues on from last point
+            // nQueue is empty and has no key to set to global, if statement prevents the index out of range issue
+            if(nQueue.Count == 0)
+            {
+                Global.notifTitle = null;
+            }
+            else
+            {
+                Global.notifTitle = nQueue.ElementAt(0).Key;
+            }
+
         }
 
         private bool userCheck;
@@ -199,6 +217,7 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref userCheck, value, nameof(UserCheck));
+                Preferences.Set("User", value);
                 if (value)
                 {
                     nQueue.Add("User", 1);
@@ -220,6 +239,7 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref powerCheck, value, nameof(PowerCheck));
+                Preferences.Set("Power", value);
                 if (value)
                 {
                     nQueue.Add("Power", 47);
@@ -240,6 +260,7 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref warCheck, value, nameof(WarCheck));
+                Preferences.Set("War", value);
                 if (value)
                 {
                     nQueue.Add("War", 32);
@@ -260,6 +281,7 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref masteryCheck, value, nameof(MasteryCheck));
+                Preferences.Set("Mastery", value);
                 if (value)
                 {
                     nQueue.Add("Mastery", 17);
@@ -280,6 +302,7 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref friendsCheck, value, nameof(FriendsCheck));
+                Preferences.Set("Friends", value);
                 if (value)
                 {
                     nQueue.Add("Friends", 29);
@@ -300,6 +323,7 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref humanCheck, value, nameof(HumanCheck));
+                Preferences.Set("Human", value);
                 if (value)
                 {
                     nQueue.Add("Human", 17);

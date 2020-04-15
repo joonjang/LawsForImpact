@@ -12,8 +12,12 @@ namespace LawsForImpact.Models
         public static string selectedTitle;
         public static string selectedDescription;
         public static string notifTitle;
+        public static string notifCurrentTitle;
+        public static int notifCurrentIndex;
         public static string notifDescription;
         public static string notifFullDescrip;
         public static Dictionary<string, int> notifQueue = new Dictionary<string, int>();
+
+
     }
 }

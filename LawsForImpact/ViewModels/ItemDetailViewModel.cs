@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LawsForImpact.Models;
 using LawsForImpact.Services;
 using SQLite;
@@ -40,6 +41,7 @@ namespace LawsForImpact.ViewModels
             get { return lawOrPrinciple; }
             set
             {
+                
                 lawOrPrinciple = boldHeaderTitle + ": " + FindLawOrPrinciple() + " " + value;
                 OnPropertyChanged(nameof(LawOrPrinciple));
             }
@@ -68,7 +70,8 @@ namespace LawsForImpact.ViewModels
 
             return tmp;
         }
-        string boldHeaderTitle;
+
+        string boldHeaderTitle = Global.notifCurrentTitle;
         public async void LoadData()
         { 
             try

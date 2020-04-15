@@ -19,12 +19,13 @@ namespace LawsForImpact.Views
         {
             // starting 'Today' page, loads up a random element from the database
             InitializeComponent();
-            
-            viewModel = new ItemDetailViewModel();
 
-            viewModel.LawOrPrinciple = "";
-            viewModel.HeaderTitle = Global.notifDescription;
-            viewModel.HeaderDescription = Global.notifFullDescrip;
+            viewModel = new ItemDetailViewModel
+            {
+                HeaderTitle = Global.notifDescription,
+                HeaderDescription = Global.notifFullDescrip,
+                LawOrPrinciple = Global.notifCurrentIndex.ToString()
+            };
             if (viewModel.HeaderTitle == null)
             {
                 viewModel.LoadData();

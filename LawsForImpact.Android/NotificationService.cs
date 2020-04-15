@@ -191,6 +191,7 @@ namespace LawsForImpact.Droid
 
             
             string choseNotifElement = nQueue.ElementAt(Global.whichElement).Key;
+            Global.notifCurrentTitle = choseNotifElement;
 
             // checks whether current table index overflows, resets to starting point if yes
             if (nQueue[choseNotifElement] < 0)
@@ -200,6 +201,7 @@ namespace LawsForImpact.Droid
 
             // next index chosen
             int returnedIndex = elementMax - nQueue[choseNotifElement];
+            Global.notifCurrentIndex = returnedIndex;
             // todo figure out what happens when queue number reaches 0
             nQueue[choseNotifElement] = nQueue[choseNotifElement] - 1;
 
