@@ -27,9 +27,6 @@ namespace LawsForImpact.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            var intent = new Intent(this, typeof(PeriodicService));
-            StartService(intent);
-
             base.OnCreate(savedInstanceState);
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);

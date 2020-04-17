@@ -22,14 +22,12 @@ namespace LawsForImpact.ViewModels
             Title = "Notification";
             OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
             HeaderTitle = Global.notifTitle;
-
             userCheck = Preferences.Get("User", false);
             powerCheck = Preferences.Get("Power", false);
             warCheck = Preferences.Get("War", false);
             masteryCheck = Preferences.Get("Mastery", false);
             friendsCheck = Preferences.Get("Friends", false);
             humanCheck = Preferences.Get("Human", false);
-
         }
 
         private string headerTitle;
@@ -220,7 +218,6 @@ namespace LawsForImpact.ViewModels
             {
                 SetProperty(ref userCheck, value, nameof(UserCheck));
                 Preferences.Set("User", value);
-
                 if (value)
                 {
                     nQueue.Add("User", 1);
@@ -340,5 +337,6 @@ namespace LawsForImpact.ViewModels
             }
         }
 
+        
     }
 }
