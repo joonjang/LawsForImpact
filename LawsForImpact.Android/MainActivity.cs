@@ -32,40 +32,19 @@ namespace LawsForImpact.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
 
-            //OnNewIntent(Intent);
+            //var intent = new Intent(this, typeof(PeriodicService));
+            //StartService(intent);
+
+            var alarmIntent = new Intent(this, typeof(BackgroundReceiver));
+
+            var pending = PendingIntent.GetBroadcast(this, 0, alarmIntent, PendingIntentFlags.UpdateCurrent);
+
+            var alarmManager = GetSystemService(AlarmService).JavaCast<AlarmManager>();
+            alarmManager.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 3 * 1000, pending);
+
         }
 
-        //protected override void OnNewIntent(Intent intent)
-        //{
-            
 
-        //    // Send message to the PCL (XF) if a certain page should be opened.
-        //    if (intent.HasExtra("OpenPage"))
-        //    {
-        //        string pageName = intent.GetStringExtra("OpenPage") ?? "None";
-
-        //        if (pageName != "None")
-        //        {
-        //            var message = new OpenPageMessage { PageName = pageName };
-        //            MessagingCenter.Send(message, Message.Msg_OpenPage);
-
-
-        //        }
-        //    }
-
-        //    base.OnNewIntent(intent);
-        //    //CreateNotificationFromIntent(Intent);
-        //}
-        
-        //void CreateNotificationFromIntent(Intent intent)
-        //{
-        //    if (intent?.Extras != null)
-        //    {
-        //        string title = intent.Extras.GetString(AndroidNotificationManager.TitleKey);
-        //        string message = intent.Extras.GetString(AndroidNotificationManager.MessageKey);
-        //        DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
-        //    }
-        //}
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);

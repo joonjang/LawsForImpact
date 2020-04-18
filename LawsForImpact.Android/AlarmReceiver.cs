@@ -11,6 +11,11 @@ using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
+using LawsForImpact.Models;
+using LawsForImpact.Services;
+using LawsForImpact.Views;
+using SQLite;
+using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
 
 namespace LawsForImpact.Droid
 {
@@ -20,8 +25,10 @@ namespace LawsForImpact.Droid
         const string channelId = "default";
         public override void OnReceive(Context context, Intent intent)
         {
+
             var message = intent.GetStringExtra("message");
             var title = intent.GetStringExtra("title");
+
 
             var notIntent = new Intent(context, typeof(MainActivity));
             var contentIntent = PendingIntent.GetActivity(context, 0, notIntent, PendingIntentFlags.CancelCurrent);
@@ -35,6 +42,8 @@ namespace LawsForImpact.Droid
             resourceId = Resource.Drawable.xamarin_logo;
 
             var wearableExtender = new NotificationCompat.WearableExtender().SetBackground(BitmapFactory.DecodeResource(context.Resources, resourceId));
+
+            
 
             // Generate a notification
             // todo look at notification compat properties

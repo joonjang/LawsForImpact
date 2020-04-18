@@ -24,6 +24,8 @@ namespace LawsForImpact.Droid
     {
         public void Remind(DateTime dateTime, string title, string message)
         {
+
+
             // create alarm intent
             Intent alarmIntent = new Intent(Application.Context, typeof(AlarmReceiver));
             alarmIntent.PutExtra("message", message);
@@ -35,7 +37,18 @@ namespace LawsForImpact.Droid
 
             // set the time when app is woken up
             // todo: this is where time is adjusted
-            alarmManager.Set(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 5* 1000, pendingIntent);
+            alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 5* 1000, 1000, pendingIntent);
+
+
+
+            ////Intent alarmIntent = new Intent(this, typeof(AlarmReceiver));
+
+            ////PendingIntent pendingIntent = PendingIntent.GetBroadcast(this, 0, alarmIntent, PendingIntentFlags.UpdateCurrent);
+            ////AlarmManager alarmManager = (AlarmManager)GetSystemService(Context.AlarmService);
+            //var tomorrowMorningTime = new DateTime(DateTime.Now.AddDays(1).Year, DateTime.Now.AddDays(1).Month, DateTime.Now.AddDays(1).Day, 0, 0, 1);
+            //var timeDifference = tomorrowMorningTime – DateTime.Now;
+            //var millisecondsInOneDay = 86400000;
+            //alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + (long)timeDifference.TotalMilliseconds, (long)millisecondsInOneDay, pendingIntent);
         }
 
     }

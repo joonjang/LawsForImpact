@@ -15,14 +15,34 @@ namespace LawsForImpact.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DebugBackgroundCounter : ContentPage
     {
-        
+
+       
         Timer timer;
         public DebugBackgroundCounter()
         {
             InitializeComponent();
             BindingContext = this;
 
-           
+
+            MessagingCenter.Subscribe<object, string>(this, "UpdateLabel", (s, e) =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    BackgroundServiceLabel.Text = e;
+                });
+            });
+
+        }
+
+        private bool wake;
+        public bool Wake
+        {
+            get => wake;
+            set
+            {
+                wake = value;
+                SetProperty(ref wake, value, nameof(Wake));
+            }
         }
 
         private void Button_Clicked(object sender, EventArgs e)
@@ -30,7 +50,7 @@ namespace LawsForImpact.Views
             CountFunctionOn();
         }
 
-        void CountFunctionOn()
+        public void CountFunctionOn()
         {
             timer = new Timer();
             timer.Interval = 500;
@@ -39,7 +59,17 @@ namespace LawsForImpact.Views
             timer.Elapsed += CountEvent;
         }
 
-        private string x;
+        private string message;
+        public string Message
+        {
+            get => message;
+            set
+            {
+                SetProperty(ref message, value, nameof(Message));
+            }
+        }
+
+       
 
         private int counter;
         public int Counter
@@ -47,6 +77,7 @@ namespace LawsForImpact.Views
             get => counter;
             set
             {
+                Message = counter.ToString();
                 SetProperty(ref counter, value, nameof(Counter));
             }
         }
@@ -76,7 +107,19 @@ namespace LawsForImpact.Views
 
         private void Button_Clicked_2(object sender, EventArgs e)
         {
-            DependencyService.Get<IReminderService>().Remind(DateTime.Now, "INSERT MY TITLE","INSERT MY MESSAGE");
+            DependencyService.Get<IReminderService>().Remind(DateTime.Now, "INSERT MY TITLE","INSERT MY MES" +
+                "asaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaSAGE");
+        }
+
+        public void Start()
+        {
+            CountFunctionOn();
         }
     }
 }

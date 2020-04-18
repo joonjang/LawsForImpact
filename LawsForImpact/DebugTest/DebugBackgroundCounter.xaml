@@ -9,7 +9,16 @@
         <StackLayout>
             <Button Text="{Binding Counter}" Clicked="Button_Clicked"/>
             <Button Text="STOP" Clicked="Button_Clicked_1"/>
+            
+            <Label Text="BITCH SLUT TITS BLOW JOBS" 
+           x:Name="BackgroundServiceLabel"
+           VerticalOptions="Center" 
+           HorizontalOptions="Center" />
+            
+            <Label Text="{Binding Wake}" FontSize="30" BackgroundColor="LightBlue"/>
+
             <Button Clicked="Button_Clicked_2" VerticalOptions="EndAndExpand" Text="notification"/>
+            <Label Text="{Binding Message}" BackgroundColor="Orange" FontSize="30"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
