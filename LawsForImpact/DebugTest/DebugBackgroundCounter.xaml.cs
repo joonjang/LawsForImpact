@@ -1,5 +1,6 @@
 ﻿using LawsForImpact.DebugTest;
 using LawsForImpact.Services;
+using Plugin.LocalNotifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using Xamarin.Forms.Xaml;
 namespace LawsForImpact.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
+    
     public partial class DebugBackgroundCounter : ContentPage
     {
 
@@ -24,11 +26,20 @@ namespace LawsForImpact.Views
             BindingContext = this;
 
 
-            MessagingCenter.Subscribe<object, string>(this, "UpdateLabel", (s, e) =>
+            //MessagingCenter.Subscribe<object, string>(this, "UpdateLabel", (s, e) =>
+            //{
+            //    Device.BeginInvokeOnMainThread(() =>
+            //    {
+            //        BackgroundServiceLabel.Text = e;
+            //    });
+            //});
+
+            MessagingCenter.Subscribe<object>(this, "SendNotification", (s) =>
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    BackgroundServiceLabel.Text = e;
+                    CrossLocalNotifications.Current.Cancel(0);
+                    CrossLocalNotifications.Current.Show("Alarm", "BZEM notification time", 0, DateTime.Now) ;
                 });
             });
 
@@ -117,9 +128,13 @@ namespace LawsForImpact.Views
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaSAGE");
         }
 
-        public void Start()
+        private void Button_Clicked_3(object sender, EventArgs e)
         {
-            CountFunctionOn();
+
+                DependencyService.Get<IDebugNotiServ>().Cancel(0);
+                DependencyService.Get<IDebugNotiServ>().LocalNotification("Local Notification", "BODY MESSAGE", 0, DateTime.Now);
+                App.Current.MainPage.DisplayAlert("Noti title from debug bg page", "lets fucking gettit", "LETS FUCKING WIN");
+
         }
     }
 }

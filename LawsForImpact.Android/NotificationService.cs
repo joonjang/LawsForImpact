@@ -173,6 +173,7 @@ namespace LawsForImpact.Droid
         string ruleIndex;
         string title;
         string message;
+        int iteratedIndex;
 
         // determine next notification
         private int notifIterator(int elementMax)
@@ -222,7 +223,7 @@ namespace LawsForImpact.Droid
             return returnedIndex-1;
 
         }
-        int iteratedIndex;
+        
         private async void RefreshListView()
         {
             try

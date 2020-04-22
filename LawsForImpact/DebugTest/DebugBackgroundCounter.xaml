@@ -16,6 +16,7 @@
            HorizontalOptions="Center" />
             
             <Label Text="{Binding Wake}" FontSize="30" BackgroundColor="LightBlue"/>
+            <Button Text="bdskjaflfjsdlk" Clicked="Button_Clicked_3" />
 
             <Button Clicked="Button_Clicked_2" VerticalOptions="EndAndExpand" Text="notification"/>
             <Label Text="{Binding Message}" BackgroundColor="Orange" FontSize="30"/>

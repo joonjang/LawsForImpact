@@ -60,6 +60,22 @@ namespace LawsForImpact.Droid
             var notification = builder.Build();
             manager.Notify(0, notification);
 
+            // this seems to work when the above notify doesnt work
+
+            // var resultIntent = NotificationService.GetLauncherActivity();
+            //resultIntent.SetFlags(ActivityFlags.NewTask | ActivityFlags.ClearTask);
+            //var stackBuilder = Android.Support.V4.App.TaskStackBuilder.Create(Application.Context);
+            //stackBuilder.AddNextIntent(resultIntent);
+            //Random random = new Random();
+            //int randomNumber = random.Next(9999 - 1000) + 1000;
+
+            //var resultPendingIntent =
+            //    stackBuilder.GetPendingIntent(randomNumber, (int)PendingIntentFlags.Immutable);
+            //builder.SetContentIntent(resultPendingIntent);
+            //// Sending notification    
+            //var notificationManager = NotificationManagerCompat.From(Application.Context);
+            //notificationManager.Notify(randomNumber, builder.Build());
+
         }
     }
 }

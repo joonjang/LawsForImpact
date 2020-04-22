@@ -18,9 +18,15 @@ namespace LawsForImpact.ViewModels
         Dictionary<string, int> nQueue = Global.notifQueue;
         public NotificationViewModel()
         {
-            //SaveCommand = new Command(() => SaveLocalNotification());
+
+            ///////
+            SaveCommand = new Command(() => SaveLocalNotification());
+            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
+            //////
+
+
+
             Title = "Notification";
-            //OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
             HeaderTitle = Global.notifTitle;
             userCheck = Preferences.Get("User", false);
             powerCheck = Preferences.Get("Power", false);
@@ -41,59 +47,65 @@ namespace LawsForImpact.ViewModels
             }
         }
 
-        //public ICommand OpenWebCommand { get; }
+        /////////////////////////////////
 
-        //Command _saveCommand;
-        //public Command SaveCommand
-        //{
-        //    get
-        //    {
-        //        return _saveCommand;
-        //    }
-        //    set
-        //    {
-        //        SetProperty(ref _saveCommand, value);
-        //    }
-        //}
+        public ICommand OpenWebCommand { get; }
 
-        //DateTime _selectedDate = DateTime.Today;
-        //public DateTime SelectedDate
-        //{
-        //    get
-        //    {
-        //        return _selectedDate;
-        //    }
-        //    set
-        //    {
-        //        SetProperty(ref _selectedDate, value);
-        //    }
-        //}
-        //TimeSpan _selectedTime = DateTime.Now.TimeOfDay;
-        //public TimeSpan SelectedTime
-        //{
-        //    get
-        //    {
-        //        return _selectedTime;
-        //    }
-        //    set
-        //    {
-        //        SetProperty(ref _selectedTime, value);
-        //    }
-        //}
+        Command _saveCommand;
+        public Command SaveCommand
+        {
+            get
+            {
+                return _saveCommand;
+            }
+            set
+            {
+                SetProperty(ref _saveCommand, value);
+            }
+        }
 
-        //void SaveLocalNotification()
-        //{
-        //    var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
-        //    var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
-        //    var dateTime = date + " " + time;
-        //    var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
+        DateTime _selectedDate = DateTime.Today;
+        public DateTime SelectedDate
+        {
+            get
+            {
+                return _selectedDate;
+            }
+            set
+            {
+                SetProperty(ref _selectedDate, value);
+            }
+        }
+        TimeSpan _selectedTime = DateTime.Now.TimeOfDay;
+        public TimeSpan SelectedTime
+        {
+            get
+            {
+                return _selectedTime;
+            }
+            set
+            {
+                SetProperty(ref _selectedTime, value);
+            }
+        }
 
-        //    DependencyService.Get<INotificationService>().Cancel(0);
-        //    DependencyService.Get<INotificationService>().LocalNotification("Local Notification", "BODY MESSAGE", 0, selectedDateTime);
-        //    App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
+        void SaveLocalNotification()
+        {
+            var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
+            var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
+            var dateTime = date + " " + time;
+            var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
-        //}
+            DependencyService.Get<INotificationService>().Cancel(0);
+            DependencyService.Get<INotificationService>().LocalNotification("Local Notification", "BODY MESSAGE", 0, selectedDateTime);
+            App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
 
+        }
+
+
+        /// <summary>
+        /// ////////////////////////////////////////////////////////////
+        /// </summary>
 
         // todo go over why this works
         private bool everydayToggle;

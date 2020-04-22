@@ -37,7 +37,9 @@ namespace LawsForImpact.Droid
 
             // set the time when app is woken up
             // todo: this is where time is adjusted
-            alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 5* 1000, 1000, pendingIntent);
+            //alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 5* 1000, 1000, pendingIntent);
+
+            alarmManager.Set(AlarmType.ElapsedRealtimeWakeup, SystemClock.ElapsedRealtime() + 1 * 1000,  pendingIntent);
 
 
 
