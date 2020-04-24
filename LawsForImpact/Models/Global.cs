@@ -16,7 +16,7 @@ namespace LawsForImpact.Models
         public static int notifCurrentIndex;
         public static string notifDescription;
         public static string notifFullDescrip;
-        public static Dictionary<string, int> notifQueue = new Dictionary<string, int>();
+        public static SerializableDictionary<string, int> notifQueue = new SerializableDictionary<string, int>();
 
 
     }

@@ -15,7 +15,7 @@ namespace LawsForImpact.ViewModels
     // todo make save show up only once iteration is pressed
     public class NotificationViewModel : BaseViewModel
     {
-        Dictionary<string, int> nQueue = Global.notifQueue;
+        SerializableDictionary<string, int> nQueue = Global.notifQueue;
         public NotificationViewModel()
         {
 
@@ -97,7 +97,7 @@ namespace LawsForImpact.ViewModels
             var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
             DependencyService.Get<INotificationService>().Cancel(0);
-            DependencyService.Get<INotificationService>().LocalNotification("Local Notification", "BODY MESSAGE", 0, selectedDateTime);
+            DependencyService.Get<INotificationService>().LocalNotification("firstBatch", "Message bla bla", 0, selectedDateTime, 0, nQueue);
             App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
 
         }

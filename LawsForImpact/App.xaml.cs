@@ -15,8 +15,8 @@ namespace LawsForImpact
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            MainPage = new DebugBackgroundCounter();
-            //MainPage = new MainPage();
+            //MainPage = new DebugBackgroundCounter();
+            MainPage = new MainPage();
 
         }
 

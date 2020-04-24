@@ -36,7 +36,7 @@ namespace LawsForImpact.Droid
             var localNotification = new LocalNotification();
             localNotification.Title = title;
             localNotification.Body = body;
-            localNotification.Id = id;
+            localNotification.Index = id;
             localNotification.NotifyTime = notifyTime;
 
             if (_notificationIconId != 0)
@@ -56,8 +56,7 @@ namespace LawsForImpact.Droid
 
             var pendingIntent = PendingIntent.GetBroadcast(Application.Context, Convert.ToInt32(_randomNumber), intent, PendingIntentFlags.Immutable);
             var alarmManager = GetAlarmManager();
-            // todo change variable of alarm manager
-            //totalMilliSeconds, repeateForMinute
+
             alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 3000, pendingIntent);
         }
 
@@ -148,7 +147,7 @@ namespace LawsForImpact.Droid
             var extra = intent.GetStringExtra(LocalNotificationKey);
             var notification = DeserializeNotification(extra);
 
-            int notiID = notification.Id;
+            int notiID = notification.Index;
 
 
             PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.OneShot);

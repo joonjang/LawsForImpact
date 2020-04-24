@@ -10,10 +10,16 @@ namespace LawsForImpact.Models
 
         public string Body { get; set; }
 
-        public int Id { get; set; }
+        public int Index { get; set; }
 
         public int IconId { get; set; }
 
         public DateTime NotifyTime { get; set; }
+
+        public long RepeatInterval { get; set; }
+
+        public SerializableDictionary<string, int> NotificationQueue { get; set; }
+
+        public int QueueIndex { get; set; }
     }
 }
