@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using LawsForImpact.Services;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text;
 namespace LawsForImpact.Models
 {
     [Table("Power")]
-    public class Power
+    public class Power : IDataTable
     {
         [PrimaryKey]
         public int Law { get; set; }

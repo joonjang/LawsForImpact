@@ -29,7 +29,7 @@ namespace LawsForImpact.Droid
         readonly DateTime _jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         internal string _randomNumber;
 
-        public void LocalNotification(string title, string body, int id, DateTime notifyTime, int queueIndex, SerializableDictionary<string, int> notificationQueue, long nextRepeat = 3000)
+        public void LocalNotification(int id, DateTime notifyTime, int queueIndex, SerializableDictionary<string, int> notificationQueue, long nextRepeat = 3000)
         {
             // !Todo change the repeated length, connect the notification interval switch with these
             //long repeateDay = 1000 * 60 * 60 * 24;    
@@ -76,9 +76,9 @@ namespace LawsForImpact.Droid
             // id might cause problem because im using it as index and intent is using as id, index is going to repeat, is that ok
             var intent = CreateIntent(id);
             var localNotification = new LocalNotification();
-            localNotification.Title = title;
-            localNotification.Body = body;
-            localNotification.Index = id;
+            //localNotification.Title = title;
+            //localNotification.Body = body;
+            //localNotification.Index = id;
             localNotification.NotifyTime = notifyTime;
             localNotification.RepeatInterval = selectedRepeat;
             localNotification.QueueIndex = queueIndex;
@@ -180,15 +180,14 @@ namespace LawsForImpact.Droid
         string message;
         int iteratedIndex;
 
-        int nextIndex;
 
-        int whichElement;
+        // current stuff
+        int currentElementIndex;
         string currentTitle;
-        int currentIndex;
-        string nextNotifTitle;
-        string nextTitle;
-        string nextMessage;
 
+        // next information
+        string nextNotifTableName;
+        int nextElementIndex;
 
 
         public override void OnReceive(Context context, Intent intent)
@@ -204,10 +203,6 @@ namespace LawsForImpact.Droid
             intent.SetFlags(ActivityFlags.SingleTop);
             intent.PutExtra("OpenPage", "SomePage");
 
-            // TODO issue is the count keeps going up and doesnt restart
-            Global.count++;
-
-            
 
             var extra = intent.GetStringExtra(LocalNotificationKey);
             var notification = DeserializeNotification(extra);
@@ -215,18 +210,10 @@ namespace LawsForImpact.Droid
             notificationNumber++;
 
             nQueue = notification.NotificationQueue;
-            whichElement = notification.QueueIndex;
-            currentTitle = notification.NotificationQueue.ElementAt(whichElement).Key;
-            currentIndex = notification.Index;
+            currentElementIndex = notification.QueueIndex;
+            currentTitle = notification.NotificationQueue.ElementAt(currentElementIndex).Key;
 
-            loadData(nQueue, whichElement);
-
-            if (notification.Title != "firstBatch")
-            {
-                title = notification.Title;
-                message = notification.Body;
-            }
-            textStyle.BigText(message);
+            LoadData();
 
             PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.OneShot);
 
@@ -254,229 +241,123 @@ namespace LawsForImpact.Droid
             var notificationManager = NotificationManagerCompat.From(Application.Context);
             notificationManager.Notify(randomNumber, builder.Build());
 
-            Xamarin.Forms.DependencyService.Get<INotificationService>().LocalNotification(title, message, 0, DateTime.Now, 0, nQueue, notification.RepeatInterval);
+            Xamarin.Forms.DependencyService.Get<INotificationService>().LocalNotification(0,DateTime.Now, nextElementIndex, nQueue, notification.RepeatInterval);
         }
 
-        // the issue is it iterates through the table but it always outputs the Master table
-        private async void loadData(Dictionary<string, int> queue, int whichTableIndex)
+        private async void LoadData()
         {
-            try
+
+            //SOLVED: go over how inherited base interface can become the generic list 
+            // so far IEnumerable can hold the different list type, but why
+            // enumerable is just a general blanket of lazily getting information, converting that to a more 
+            // structured type seemed to do the trick
+            _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+            IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
+            List<IDataTable> listData;
+
+            switch (currentTitle)
             {
-                string currentTable = queue.ElementAt(whichTableIndex).Key;
-
-                switch (currentTable)
-                {
-                    case "Power":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataPower = _sqLiteConnection.Table<Power>().ToList();
-
-                        title = listDataPower[currentIndex].Title;
-                        message = listDataPower[currentIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-
-                        // inserts info of the max index count of table
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Power>().Count());
-                        break;
-                    case "Mastery":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataMastery = _sqLiteConnection.Table<Mastery>().ToList();
-
-                        title = listDataMastery[currentIndex].Title;
-                        message = listDataMastery[currentIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-
-                        // inserts info of the max index count of table
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Mastery>().Count());
-                        break;
-                }
-                //switch (choseNotifElement)
-                //{
-                //    case "Power":
-                //        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                //        var listDataPower = _sqLiteConnection.Table<Power>().ToList();
-                //        iteratedIndex = notifIterator(_sqLiteConnection.Table<Power>().Count());
-                //        //ruleIndex = $"Law {iteratedIndex + 1}";
-                //        nextTitle = listDataPower[iteratedIndex].Title;
-                //        nextMessage = listDataPower[iteratedIndex].Description;
-                //        //Global.notifDescription = title;
-                //        //Global.notifFullDescrip = message;
-
-                //        // inserts info of the max index count of table
-                        
-                //        break;
-                //    case "Mastery":
-                //        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                //        var listDataMastery = _sqLiteConnection.Table<Mastery>().ToList();
-                //        iteratedIndex = notifIterator(_sqLiteConnection.Table<Mastery>().Count());
-                //        //ruleIndex = $"Principle {iteratedIndex + 1}";
-                //        nextTitle = listDataMastery[iteratedIndex].Title;
-                //        nextMessage = listDataMastery[iteratedIndex].Description;
-                //        //Global.notifDescription = title;
-                //        //Global.notifFullDescrip = message;
-
-                //        // inserts info of the max index count of table
-                        
-                //        break;
-                //}
-                
+                case "Power":
+                    tableToEnumerable = _sqLiteConnection.Table<Power>().ToList();
+                    break;
+                case "Mastery":
+                    tableToEnumerable = _sqLiteConnection.Table<Mastery>().ToList();
+                    break;
+                case "Personal":
+                    tableToEnumerable = _sqLiteConnection.Table<User>().ToList();
+                    break;
+                case "War":
+                    tableToEnumerable = _sqLiteConnection.Table<War>().ToList();
+                    break;
+                case "Friends":
+                    tableToEnumerable = _sqLiteConnection.Table<Friends>().ToList();
+                    break;
+                case "Human":
+                    tableToEnumerable = _sqLiteConnection.Table<Human>().ToList();
+                    break;
             }
-            catch (System.Exception e)
+            listData = tableToEnumerable.ToList();
+
+
+
+            int index = listData.Count() - nQueue[currentTitle];
+            index = index - 1;
+
+            // sets all the current notification information
+            title = listData[index].Title;
+            message = listData[index].Description;
+
+            //logic for next notification
+
+            // check for index overflow
+            if (nQueue[currentTitle] == 0)
             {
-                Console.WriteLine(e);
+                nQueue[currentTitle] = listData.Count() - 1;
             }
 
-        }
+            // subtract the queue int of current notification subject to keep track of next index
+            nQueue[currentTitle] = nQueue[currentTitle] - 1;
+            int x = nQueue[currentTitle];
 
+            //if (nQueue[currentTitle] == 0)
+            //{
+            //    nQueue[currentTitle] = listData.Count() - 1;
+            //}
 
-
-        string choseNotifElement;
-        // determine next notification
-        private int notifIterator(int elementMax)
-        {
-            //SOLVED: War skips exponentially
-            
-            if (whichElement >= nQueue.Count)
-            {
-                // if all elements have gone through once, starts back to first element
-                whichElement = 0;
-            }
-
-            currentIndex = nQueue.ElementAt(whichElement).Value;
-
-
-            
-           
-            choseNotifElement = nQueue.ElementAt(whichElement).Key;
-            whichElement++;
-            // next index chosen
-            int returnedIndex = elementMax - nQueue[choseNotifElement];
-            currentIndex = returnedIndex;
-
-
-            // next notification table on the list
-            if (whichElement >= nQueue.Count)
-            { 
-                whichElement = 0;
-            }
-
-
-            // sets to next table
-            choseNotifElement = nQueue.ElementAt(whichElement).Key;
-
-            // checks whether current table index overflows, resets to starting point if yes
-            if (currentIndex < 0)
-            {
-                nQueue[choseNotifElement] = elementMax - 1;
-            }
-
-
-            // todo figure out what happens when queue number reaches 0
-            nQueue[choseNotifElement] = nQueue[choseNotifElement] - 1;
-
-           
-
+            // index of next table
+            nextElementIndex = currentElementIndex + 1;
             
 
-            //todo restart the value count if zero is hit
-            return returnedIndex-1;
-
-        }
-
-
-        private async void RefreshListView(Dictionary<string, int> queue, int whichTableIndex)
-        {
-            try
+            // if next table index overflows that means its time to restart the table index and move up the notification index
+            if(nextElementIndex >= nQueue.Count)
             {
-                // where the cooridination of which title to use
-                // TODO how notifications come out
-                string currentTable = queue.ElementAt(whichTableIndex).Key;
-
-                switch (currentTable)
-                {
-                    case "Power":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataPower = _sqLiteConnection.Table<Power>().ToList();
-
-                        // inserts info of the max index count of table
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Power>().Count());
-
-                        ruleIndex = $"Law {iteratedIndex + 1}";
-                        title = listDataPower[iteratedIndex].Title;
-                        message = listDataPower[iteratedIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-                        break;
-                    case "Mastery":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataMastery = _sqLiteConnection.Table<Mastery>().ToList();
-
-                        // inserts info of the max index count of table
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Mastery>().Count());
-
-                        ruleIndex = $"Principle {iteratedIndex + 1}";
-                        title = listDataMastery[iteratedIndex].Title;
-                        message = listDataMastery[iteratedIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-                        break;
-                    case "War":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataWar = _sqLiteConnection.Table<War>().ToList();
-
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<War>().Count());
-
-                        ruleIndex = $"Law {iteratedIndex + 1}";
-                        title = listDataWar[iteratedIndex].Title;
-                        message = listDataWar[iteratedIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-                        break;
-                    case "Friends":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataFriends = _sqLiteConnection.Table<Friends>().ToList();
-
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Friends>().Count());
-
-                        ruleIndex = $"Law {iteratedIndex + 1}";
-                        title = listDataFriends[iteratedIndex].Title;
-                        message = listDataFriends[iteratedIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-                        break;
-                    case "Human":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataHuman = _sqLiteConnection.Table<Human>().ToList();
-
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<Human>().Count());
-
-                        ruleIndex = $"Law {iteratedIndex + 1}";
-                        title = listDataHuman[iteratedIndex].Title;
-                        message = listDataHuman[iteratedIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-                        break;
-                    case "User":
-                        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-                        var listDataUser = _sqLiteConnection.Table<User>().ToList();
-
-                        iteratedIndex = notifIterator(_sqLiteConnection.Table<User>().Count());
-
-                        ruleIndex = $"Reminder {iteratedIndex + 1}";
-                        title = listDataUser[iteratedIndex].Title;
-                        message = listDataUser[iteratedIndex].Description;
-                        //Global.notifDescription = title;
-                        //Global.notifFullDescrip = message;
-                        break;
-                }
-            }
-            catch (System.Exception e)
-            {
-                Console.WriteLine(e);
+                nextElementIndex = 0;
             }
 
+            // nextIndex for example:
+            // Power has 48 counts which is the elementMax, nQueue[Power] start with 47
+            // elementMax - nQueue[Power]
+            // 48 - 47 = 1 which is the index (make sure to subtract by 1)
+            // nQueue[Power] = 47 --> nQueue[Power] = 46
+            // next iteration
+            // 48 - 46 = 2 and so on...
+            //
+            // Last index occasion, nQueue[Power] = 0
+            // 48 - 0 = 48 and we subtract by 1 so the next index is set to -1
+            // so restart the nQueue[Power] count once it reach 0
+            // nQueue[Power] = maxElement - 1 --> 48 - 1 = 47
+
+            //PeakNextTableElementMax();
+
+            nextNotifTableName = nQueue.ElementAt(nextElementIndex).Key;
+            //nextIndex = nextElementMax - nQueue[nextNotifTableName];
+
+            //if (nQueue[nextNotifTableName] == 0)
+            //{
+            //    nQueue[nextNotifTableName] = nextElementMax - 1;
+            //}
+
+
         }
+        //int nextElementMax;
+        //private async void PeakNextTableElementMax()
+        //{
+        //    _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+        //    IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
+        //    List<IDataTable> listData;
+
+        //    switch (nextNotifTableName)
+        //    {
+        //        case "Power":
+        //            nextElementMax = _sqLiteConnection.Table<Power>().ToList().Count();
+        //            break;
+        //        case "Mastery":
+        //            nextElementMax = _sqLiteConnection.Table<Mastery>().ToList().Count();
+        //            break;
+        //    }
+
+        //}
+
 
         private LocalNotification DeserializeNotification(string notificationString)
         {

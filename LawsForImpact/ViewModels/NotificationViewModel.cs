@@ -97,7 +97,7 @@ namespace LawsForImpact.ViewModels
             var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
             DependencyService.Get<INotificationService>().Cancel(0);
-            DependencyService.Get<INotificationService>().LocalNotification("firstBatch", "Message bla bla", 0, selectedDateTime, 0, nQueue);
+            DependencyService.Get<INotificationService>().LocalNotification(0, selectedDateTime, 0, nQueue);
             App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
 
         }
