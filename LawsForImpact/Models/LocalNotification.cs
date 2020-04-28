@@ -21,5 +21,7 @@ namespace LawsForImpact.Models
         public SerializableDictionary<string, int> NotificationQueue { get; set; }
 
         public int QueueIndex { get; set; }
+
+        public bool RandomToggle { get; set; }
     }
 }

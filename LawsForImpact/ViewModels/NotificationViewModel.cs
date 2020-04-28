@@ -34,6 +34,8 @@ namespace LawsForImpact.ViewModels
             masteryCheck = Preferences.Get("Mastery", false);
             friendsCheck = Preferences.Get("Friends", false);
             humanCheck = Preferences.Get("Human", false);
+            randomOff = Preferences.Get("RandomOff", true);
+            randomOn = Preferences.Get("RandomOn", false);
         }
 
         private string headerTitle;
@@ -97,7 +99,7 @@ namespace LawsForImpact.ViewModels
             var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
             DependencyService.Get<INotificationService>().Cancel(0);
-            DependencyService.Get<INotificationService>().LocalNotification(0, selectedDateTime, 0, nQueue);
+            DependencyService.Get<INotificationService>().LocalNotification(0, selectedDateTime, 0, nQueue, RandomOn);
             App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
 
         }
@@ -234,7 +236,8 @@ namespace LawsForImpact.ViewModels
                 Preferences.Set("User", value);
                 if (value)
                 {
-                    nQueue.Add("User", 1);
+                    //todo change the number to a dynamic one
+                    nQueue.Add("User", 0);
                     setNotifTitle();
                 }
                 else
@@ -351,6 +354,36 @@ namespace LawsForImpact.ViewModels
             }
         }
 
-        
+        private bool randomOff;
+        public bool RandomOff
+        {
+            get => randomOff;
+            set
+            {
+                SetProperty(ref randomOff, value, nameof(RandomOff));
+                Preferences.Set("RandomOff", value);
+                if (value)
+                {
+                    RandomOn = false;
+                }
+            }
+        }
+
+        private bool randomOn;
+        public bool RandomOn
+        {
+            get => randomOn;
+            set
+            {
+                SetProperty(ref randomOn, value, nameof(RandomOn));
+                Preferences.Set("RandomOn", value);
+                if (value)
+                {
+                    RandomOff = false;
+                }
+            }
+        }
+
+
     }
 }

@@ -29,7 +29,7 @@ namespace LawsForImpact.Droid
         readonly DateTime _jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         internal string _randomNumber;
 
-        public void LocalNotification(int id, DateTime notifyTime, int queueIndex, SerializableDictionary<string, int> notificationQueue, long nextRepeat = 3000)
+        public void LocalNotification(int id, DateTime notifyTime, int queueIndex, SerializableDictionary<string, int> notificationQueue, bool randomToggle, long nextRepeat = 3000)
         {
             // !Todo change the repeated length, connect the notification interval switch with these
             //long repeateDay = 1000 * 60 * 60 * 24;    
@@ -83,6 +83,7 @@ namespace LawsForImpact.Droid
             localNotification.RepeatInterval = selectedRepeat;
             localNotification.QueueIndex = queueIndex;
             localNotification.NotificationQueue = notificationQueue;
+            localNotification.RandomToggle = randomToggle;
 
 
             if (_notificationIconId != 0)
@@ -179,6 +180,7 @@ namespace LawsForImpact.Droid
         string title;
         string message;
         int iteratedIndex;
+        bool randomBool;
 
 
         // current stuff
@@ -212,6 +214,7 @@ namespace LawsForImpact.Droid
             nQueue = notification.NotificationQueue;
             currentElementIndex = notification.QueueIndex;
             currentTitle = notification.NotificationQueue.ElementAt(currentElementIndex).Key;
+            randomBool = notification.RandomToggle;
 
             LoadData();
 
@@ -241,7 +244,7 @@ namespace LawsForImpact.Droid
             var notificationManager = NotificationManagerCompat.From(Application.Context);
             notificationManager.Notify(randomNumber, builder.Build());
 
-            Xamarin.Forms.DependencyService.Get<INotificationService>().LocalNotification(0,DateTime.Now, nextElementIndex, nQueue, notification.RepeatInterval);
+            Xamarin.Forms.DependencyService.Get<INotificationService>().LocalNotification(0,DateTime.Now, nextElementIndex, nQueue, randomBool, notification.RepeatInterval);
         }
 
         private async void LoadData()
@@ -263,7 +266,7 @@ namespace LawsForImpact.Droid
                 case "Mastery":
                     tableToEnumerable = _sqLiteConnection.Table<Mastery>().ToList();
                     break;
-                case "Personal":
+                case "User":
                     tableToEnumerable = _sqLiteConnection.Table<User>().ToList();
                     break;
                 case "War":
@@ -279,9 +282,19 @@ namespace LawsForImpact.Droid
             listData = tableToEnumerable.ToList();
 
 
+            int tmp = nQueue[currentTitle];
 
             int index = listData.Count() - nQueue[currentTitle];
             index = index - 1;
+
+
+            // if random enabled
+            if (randomBool)
+            {
+                Random random = new Random();
+                index = random.Next(0, listData.Count());
+            }
+
 
             // sets all the current notification information
             title = listData[index].Title;
@@ -289,15 +302,16 @@ namespace LawsForImpact.Droid
 
             //logic for next notification
 
+
+            // subtract the queue int of current notification subject to keep track of next index
+            nQueue[currentTitle] = nQueue[currentTitle] - 1;
+
             // check for index overflow
-            if (nQueue[currentTitle] == 0)
+            if (nQueue[currentTitle] < 0)
             {
                 nQueue[currentTitle] = listData.Count() - 1;
             }
 
-            // subtract the queue int of current notification subject to keep track of next index
-            nQueue[currentTitle] = nQueue[currentTitle] - 1;
-            int x = nQueue[currentTitle];
 
             //if (nQueue[currentTitle] == 0)
             //{

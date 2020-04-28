@@ -40,6 +40,7 @@ namespace LawsForImpact.ViewModels
 
 		public ListView MyListView;
 
+
 		public async void RefreshListView()
 		{
 			try

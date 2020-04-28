@@ -12,7 +12,7 @@
         <vm:NotificationViewModel />
     </ContentPage.BindingContext>
     <ScrollView>
-    <StackLayout  Padding="25,40,25,30" >
+    <StackLayout  Padding="25,10,25,30" >
 
         <StackLayout>
             <StackLayout Orientation="Horizontal">
@@ -41,6 +41,7 @@
             </StackLayout>
         </StackLayout>
 
+           
         <StackLayout Padding="0,20,0,0">
         <Grid Grid.Row="1">
                 <StackLayout>
@@ -64,9 +65,24 @@
                         <Label Text="Once a month" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
                         <Switch IsToggled="{Binding MonthlyToggle}" HorizontalOptions="EndAndExpand"/>
                     </StackLayout>
-                </StackLayout>
+
+                        
+                    </StackLayout>
             </Grid>
-            
+
+                <StackLayout Margin="0,25,0,0">
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                        <Label Text="Iterate through list in order" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                        <Switch IsToggled="{Binding RandomOff}" HorizontalOptions="EndAndExpand"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+
+                        <Label Text="Iterate through list randomly" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand"/>
+                        <Switch IsToggled="{Binding RandomOn}" HorizontalOptions="EndAndExpand"/>
+                    </StackLayout>
+                </StackLayout>
 
             <Grid Grid.Row="2">
                 <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
