@@ -21,7 +21,7 @@ namespace LawsForImpact.Views
 
             Item = new Item
             {
-                Text = "Item name",
+                Text = "Insert item header",
                 Description = "This is an item description."
             };
 

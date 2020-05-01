@@ -6,26 +6,33 @@
              mc:Ignorable="d"
              x:Class="LawsForImpact.Views.PowerPage">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IsEnabled="{Binding AddUserItem}" Text="Add" Clicked="AddItem_Clicked" />
-    </ContentPage.ToolbarItems>
+    
+
     
     <ContentPage.Content>
         <StackLayout>
             <Label  Text="{Binding HeaderTitle}" HorizontalTextAlignment="Center"/>
-            <ListView ItemsSource="{Binding MyListView}" x:Name="MyListView" HasUnevenRows="True" SelectionMode="None">
+            <StackLayout Orientation="Horizontal">
+            <Button Text="Add" Clicked="AddItem_Clicked" IsVisible="{Binding AddUserItem}" HorizontalOptions="CenterAndExpand"/>
+            <Button Text="Delete" Clicked="Delete_Clicked" IsVisible="{Binding AddUserItem}" HorizontalOptions="CenterAndExpand"/>
+                <Button Text="Cancel" Clicked="Cancel_Clicked"  IsVisible="{Binding DeleteChecked}" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+            <ListView ItemsSource="{Binding MyListView}" x:Name="MyListView" HasUnevenRows="True"  ItemSelected="OnItemSelected" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Margin="10">
+                            <StackLayout Margin="10">
                                 <Label Text="{Binding Law,  StringFormat='Law {0}'}" d:Text="Item name" FontAttributes="Bold,Italic"/>
                                 <Label Text="{Binding Title}" d:Text="Item name" FontAttributes="Bold" FontSize="20"/>
                                 <Label Text="{Binding Description}" d:Text="Item name"/>
-                                </StackLayout>
+
+                            </StackLayout>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+            <Button Text="Confirm" Clicked="ConfirmDelete_Clicked"  IsVisible="{Binding DeleteChecked}" HorizontalOptions="CenterAndExpand"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

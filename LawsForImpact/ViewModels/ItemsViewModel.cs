@@ -7,6 +7,8 @@ using Xamarin.Forms;
 
 using LawsForImpact.Models;
 using LawsForImpact.Views;
+using SQLite;
+using LawsForImpact.Services;
 
 namespace LawsForImpact.ViewModels
 {
@@ -21,11 +23,16 @@ namespace LawsForImpact.ViewModels
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
+
+            // where user's new input is added to database
             MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
             {
                 var newItem = item as Item;
-                Items.Add(newItem);
-                await DataStore.AddItemAsync(newItem);
+                User addUserInfo = new User();
+                addUserInfo.Title = newItem.Text;
+                addUserInfo.Description = newItem.Description;
+                SQLiteConnection userSQL = await DependencyService.Get<ISQLite>().GetConnection();
+                userSQL.Insert(addUserInfo);
             });
         }
 

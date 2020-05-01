@@ -9,7 +9,7 @@ namespace LawsForImpact.Models
     [Table("User")]
     public class User : IDataTable
     {
-        [PrimaryKey]
+        [PrimaryKey, AutoIncrement]
         public int Law { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

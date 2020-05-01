@@ -37,15 +37,27 @@ namespace LawsForImpact.Views
 		//	viewModel.RefreshListView();
 		//}
 
-		// add stuff into User database
-		async void AddItem_Clicked(object sender, EventArgs e)
-		{
-			await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
-		}
-
+	
 		//================== OLD CODE ========================
 
 		private SQLiteConnection _sqLiteConnection;
+
+
+		public PowerPage()
+		{
+
+			InitializeComponent();
+			// BindingContext hooks xaml binding to this class
+			BindingContext = this;
+			// sets Global.selectDescription to headerTitle through HeaderTitle
+			// needs to go through HeaderTitle to call OnPropertyChanged method 
+			// not too sure why OnPropertyChanged is required but it makes it work
+			HeaderTitle = Global.selectedDescription;
+			AddUserItem = Global.selectedTitle == "Personal";
+			DeleteChecked = false;
+
+		}
+
 		// TODO hookk up the headerTitle with xaml
 		// look at how MyListView is binded
 		// use the MockData info instead
@@ -60,18 +72,7 @@ namespace LawsForImpact.Views
 			}
 		}
 
-		public PowerPage()
-		{
 
-			InitializeComponent();
-			// BindingContext hooks xaml binding to this class
-			BindingContext = this;
-			// sets Global.selectDescription to headerTitle through HeaderTitle
-			// needs to go through HeaderTitle to call OnPropertyChanged method 
-			// not too sure why OnPropertyChanged is required but it makes it work
-			HeaderTitle = Global.selectedDescription;
-
-		}
 
 		protected override void OnAppearing()
 		{
@@ -123,6 +124,94 @@ namespace LawsForImpact.Views
 
 		}
 
+		private bool addUserItem;
+		public bool AddUserItem
+		{
+			get => addUserItem;
+			set
+			{
+				addUserItem = value;
+				OnPropertyChanged(nameof(AddUserItem));
+			}
+		}
+
+
+		// add stuff into User database
+		async void AddItem_Clicked(object sender, EventArgs e)
+		{
+			await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
+		}
+
+		private void Delete_Clicked(object sender, EventArgs e)
+		{
+			DeleteChecked = true;
+		}
+
+
+		// add to list of deletable items from database
+		// makes the cancel and confirm button visible
+		private bool deleteChecked;
+		public bool DeleteChecked
+		{
+			get => deleteChecked;
+			set
+			{
+				deleteChecked = value;
+
+				AddUserItem = !value;
+				OnPropertyChanged(nameof(DeleteChecked));
+			}
+		}
+
+
+
+		private void Cancel_Clicked(object sender, EventArgs e)
+		{
+			MyListView.SelectedItem = null;
+			DeleteChecked = false;
+		}
+
+		private void ConfirmDelete_Clicked(object sender, EventArgs e)
+		{
+			_sqLiteConnection.Delete(deleteSubject);
+			DeleteChecked = false;
+			MyListView.SelectedItem = null;
+			
+			RefreshListView();
+		}
+
+
+
+		User deleteSubject;
+		void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+		{
+			if (DeleteChecked == false)
+			{
+				MyListView.SelectedItem = null;
+			}
+			else
+			{
+				var itemProperty = MyListView.SelectedItem as User;
+				deleteSubject = (from item in _sqLiteConnection.Table<User>()
+									  where item.Law == itemProperty.Law
+									  select item).FirstOrDefault();
+
+			}
+
+		}
+
+
+		private string addDeleteList;
+		public string AddDeleteList
+		{
+			get => addDeleteList;
+			set
+			{
+				addDeleteList = value;
+
+				OnPropertyChanged(nameof(AddDeleteList));
+			}
+		}
 
 	}
 }
