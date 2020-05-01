@@ -10,6 +10,7 @@ using SQLite;
 using LawsForImpact.Models;
 using LawsForImpact.Services;
 using LawsForImpact.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace LawsForImpact.Views
 {
@@ -42,7 +43,6 @@ namespace LawsForImpact.Views
 
 		private SQLiteConnection _sqLiteConnection;
 
-
 		public PowerPage()
 		{
 
@@ -55,6 +55,7 @@ namespace LawsForImpact.Views
 			HeaderTitle = Global.selectedDescription;
 			AddUserItem = Global.selectedTitle == "Personal";
 			DeleteChecked = false;
+			AddUserItem = false;
 
 		}
 
@@ -78,6 +79,7 @@ namespace LawsForImpact.Views
 		{
 			base.OnAppearing();
 			RefreshListView();
+
 		}
 
 		private async void RefreshListView()
@@ -111,6 +113,8 @@ namespace LawsForImpact.Views
 						break;
 					case "Personal":
 						var listDataUser = _sqLiteConnection.Table<User>().ToList();
+						AddUserItem = true;
+						Global.userCount = listDataUser.Count();
 						MyListView.ItemsSource = listDataUser;
 						break;
 
@@ -122,7 +126,10 @@ namespace LawsForImpact.Views
 				Console.WriteLine(e);
 			}
 
+
 		}
+
+
 
 		private bool addUserItem;
 		public bool AddUserItem
@@ -202,6 +209,8 @@ namespace LawsForImpact.Views
 
 
 		private string addDeleteList;
+		
+
 		public string AddDeleteList
 		{
 			get => addDeleteList;

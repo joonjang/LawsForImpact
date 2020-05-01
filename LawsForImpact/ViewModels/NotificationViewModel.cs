@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Globalization;
 using LawsForImpact.Models;
 using System.Linq;
+using SQLite;
 
 namespace LawsForImpact.ViewModels
 {
@@ -225,7 +226,7 @@ namespace LawsForImpact.ViewModels
             }
 
         }
-
+        
         private bool userCheck;
         public bool UserCheck
         {
@@ -237,7 +238,8 @@ namespace LawsForImpact.ViewModels
                 if (value)
                 {
                     //todo change the number to a dynamic one
-                    nQueue.Add("User", 0);
+                    
+                    nQueue.Add("User", Global.userCount);
                     setNotifTitle();
                 }
                 else

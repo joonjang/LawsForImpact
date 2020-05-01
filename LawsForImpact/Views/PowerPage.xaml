@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:LawsForImpact.Views"
              mc:Ignorable="d"
              x:Class="LawsForImpact.Views.PowerPage">
 
@@ -17,20 +18,27 @@
             <Button Text="Delete" Clicked="Delete_Clicked" IsVisible="{Binding AddUserItem}" HorizontalOptions="CenterAndExpand"/>
                 <Button Text="Cancel" Clicked="Cancel_Clicked"  IsVisible="{Binding DeleteChecked}" HorizontalOptions="CenterAndExpand"/>
             </StackLayout>
-            <ListView ItemsSource="{Binding MyListView}" x:Name="MyListView" HasUnevenRows="True"  ItemSelected="OnItemSelected" >
-                    <ListView.ItemTemplate>
+            <ListView x:Name="MyListView" HasUnevenRows="True"  ItemSelected="OnItemSelected" >
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <views:MyViewCell/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <!--<ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                             <StackLayout Margin="10">
-                                <Label Text="{Binding Law,  StringFormat='Law {0}'}" d:Text="Item name" FontAttributes="Bold,Italic"/>
-                                <Label Text="{Binding Title}" d:Text="Item name" FontAttributes="Bold" FontSize="20"/>
-                                <Label Text="{Binding Description}" d:Text="Item name"/>
+                                <Label Text="{Binding Law,  StringFormat='Law {0}'}" x:Name="lawIndexBind" FontAttributes="Bold,Italic"/>
+                                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="20"/>
+                                <Label Text="{Binding Description}"/>
 
                             </StackLayout>
                             </ViewCell>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ListView.ItemTemplate>-->
+            </ListView>
 
             <Button Text="Confirm" Clicked="ConfirmDelete_Clicked"  IsVisible="{Binding DeleteChecked}" HorizontalOptions="CenterAndExpand"/>
         </StackLayout>

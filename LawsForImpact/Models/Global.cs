@@ -6,7 +6,7 @@ namespace LawsForImpact.Models
 {
     public class Global
     {
-        public static int count = -1;
+        public static int userCount;
         public static int whichElement = -1;
         public static int whichNotifIndex = 0;
         public static string selectedTitle;
@@ -17,6 +17,7 @@ namespace LawsForImpact.Models
         public static string notifDescription;
         public static string notifFullDescrip;
         public static SerializableDictionary<string, int> notifQueue = new SerializableDictionary<string, int>();
+
 
 
     }

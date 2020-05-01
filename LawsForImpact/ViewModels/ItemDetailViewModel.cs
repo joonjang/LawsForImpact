@@ -41,8 +41,14 @@ namespace LawsForImpact.ViewModels
             get { return lawOrPrinciple; }
             set
             {
-                
-                lawOrPrinciple = boldHeaderTitle + ": " + FindLawOrPrinciple() + " " + value;
+                if (boldHeaderTitle != "User")
+                {
+                    lawOrPrinciple = boldHeaderTitle + ": " + FindLawOrPrinciple() + " " + value; 
+                }
+                else
+                {
+                    lawOrPrinciple = "";
+                }
                 OnPropertyChanged(nameof(LawOrPrinciple));
             }
         }

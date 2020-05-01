@@ -22,7 +22,7 @@ namespace LawsForImpact.Views
             Item = new Item
             {
                 Text = "Insert item header",
-                Description = "This is an item description."
+                Description = "Enter description"
             };
 
             BindingContext = this;
