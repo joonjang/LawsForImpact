@@ -17,7 +17,6 @@ namespace LawsForImpact
             DependencyService.Register<MockDataStore>();
             //MainPage = new DebugBackgroundCounter();
             MainPage = new MainPage();
-
         }
 
         protected override void OnStart()
@@ -30,6 +29,7 @@ namespace LawsForImpact
 
         protected override void OnResume()
         {
+            //MainPage = new ItemDetailPage();
         }
     }
 }

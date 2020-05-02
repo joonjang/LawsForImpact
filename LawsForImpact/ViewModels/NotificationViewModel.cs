@@ -17,11 +17,13 @@ namespace LawsForImpact.ViewModels
     public class NotificationViewModel : BaseViewModel
     {
         SerializableDictionary<string, int> nQueue = Global.notifQueue;
+        INotificationService notificationManager;
         public NotificationViewModel()
         {
 
             ///////
             SaveCommand = new Command(() => SaveLocalNotification());
+            CancelCommand = new Command(() => CancelNotification());
             OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
             //////
 
@@ -67,6 +69,24 @@ namespace LawsForImpact.ViewModels
             }
         }
 
+        Command _cancelCommand;
+        public Command CancelCommand
+        {
+            get
+            {
+                return _cancelCommand;
+            }
+            set
+            {
+                SetProperty(ref _cancelCommand, value);
+            }
+        }
+
+        void CancelNotification()
+        {
+            notificationManager.Cancel(0);
+        }
+
         DateTime _selectedDate = DateTime.Today;
         public DateTime SelectedDate
         {
@@ -92,6 +112,9 @@ namespace LawsForImpact.ViewModels
             }
         }
 
+
+        
+
         void SaveLocalNotification()
         {
             var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
@@ -99,16 +122,23 @@ namespace LawsForImpact.ViewModels
             var dateTime = date + " " + time;
             var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
-            DependencyService.Get<INotificationService>().Cancel(0);
-            DependencyService.Get<INotificationService>().LocalNotification(0, selectedDateTime, 0, nQueue, RandomOn);
-            App.Current.MainPage.DisplayAlert("LocalNotificationDemo", "Notification details saved successfully ", "Ok");
+            notificationManager = DependencyService.Get<INotificationService>();
+           
+            notificationManager.LocalNotification(0, selectedDateTime, 0, nQueue, RandomOn);
+            App.Current.MainPage.DisplayAlert("lets get the bread", "all i do is win", "fuck yeah");
 
         }
 
 
-        /// <summary>
-        /// ////////////////////////////////////////////////////////////
-        /// </summary>
+        void ShowNotification(string title, string message)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                Global.notifTitle = title;
+            });
+        }
+
+        
 
         // todo go over why this works
         private bool everydayToggle;

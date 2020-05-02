@@ -202,14 +202,16 @@ namespace LawsForImpact.Droid
             //RefreshListView(); // i deleted this and thats where it all went wrong
             // turns out it was from a switch statement in the ItemsPage
 
-            intent.SetFlags(ActivityFlags.SingleTop);
-            intent.PutExtra("OpenPage", "SomePage");
+            intent.SetFlags(ActivityFlags.ClearTop);
+            //intent.PutExtra("OpenPage", "ItemDetailPage");
+            intent.PutExtra(TitleKey, title);
+
+
 
 
             var extra = intent.GetStringExtra(LocalNotificationKey);
             var notification = DeserializeNotification(extra);
             //Generating notification    
-            notificationNumber++;
 
             nQueue = notification.NotificationQueue;
             currentElementIndex = notification.QueueIndex;
@@ -224,8 +226,8 @@ namespace LawsForImpact.Droid
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.notify_panel_notification_icon_bg))
-                .SetSmallIcon(Resource.Drawable.notify_panel_notification_icon_bg)
+                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.ic_mtrl_chip_checked_black))
+                .SetSmallIcon(Resource.Drawable.ic_mtrl_chip_checked_black)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
                 .SetStyle(textStyle);
 
@@ -400,5 +402,18 @@ namespace LawsForImpact.Droid
 
             channelInitialized = true;
         }
+
+
+        public event EventHandler NotificationReceived;
+        public void ReceiveNotification(string title, string message)
+        {
+            var args = new NotificationEventArgs()
+            {
+                Title = title,
+                Message = message,
+            };
+            NotificationReceived?.Invoke(null, args);
+        }
+
     }
 }

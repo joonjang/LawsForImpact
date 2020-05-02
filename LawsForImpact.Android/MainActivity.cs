@@ -25,6 +25,7 @@ namespace LawsForImpact.Droid
 
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -33,6 +34,7 @@ namespace LawsForImpact.Droid
             base.OnCreate(savedInstanceState);
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
             LoadApplication(new App());
 
             ////var intent = new Intent(this, typeof(PeriodicService));
@@ -48,7 +50,10 @@ namespace LawsForImpact.Droid
             //alarmManager.SetRepeating(AlarmType.RtcWakeup, 1, 1, pending);
             ////alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 1 * 1000, 1000, pending);
             ////alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, SystemClock.ElapsedRealtime() + 1 * 1000, pending);
+            
         }
+
+       
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

@@ -99,7 +99,10 @@
             <Grid Grid.Row="4">
                 <Button Text="Save" Command="{Binding SaveCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
             </Grid>
-        </StackLayout>
+                <Grid Grid.Row="5">
+                    <Button Text="Cancel" Command="{Binding CancelCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
+                </Grid>
+            </StackLayout>
 
     </StackLayout>
     </ScrollView>

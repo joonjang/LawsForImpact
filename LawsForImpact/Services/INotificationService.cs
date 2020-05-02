@@ -8,5 +8,6 @@ namespace LawsForImpact.Services
     {
         void LocalNotification(int id, DateTime notifyTime, int queueIndex, SerializableDictionary<string, int> notificationQueue, bool randomToggle = false, long nextRepeat = 3000);
         void Cancel(int id);
+       
     }
 }
