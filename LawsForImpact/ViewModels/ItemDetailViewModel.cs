@@ -43,7 +43,7 @@ namespace LawsForImpact.ViewModels
             {
                 if (boldHeaderTitle != "User")
                 {
-                    lawOrPrinciple = boldHeaderTitle + ": " + FindLawOrPrinciple() + " " + value; 
+                    lawOrPrinciple = boldHeaderTitle + ": " + FindLawOrPrinciple() + " " + value;
                 }
                 else
                 {
@@ -79,19 +79,19 @@ namespace LawsForImpact.ViewModels
 
         string boldHeaderTitle = Global.notifCurrentTitle;
         public async void LoadData()
-        { 
+        {
             try
             {
                 // where the database gets populated
                 _sqLiteConnection = await DependencyService.Get<ISQLite>().GetConnection();
                 int numberOfLaws;
                 int randLawIndex;
-                int lawIndex; 
+                int lawIndex;
                 List<string> listOfOption = new List<string>() { "Power", "Mastery", "War", "Friends", "Human" };
-            
+
                 Random rand = new Random();
 
-                if (_sqLiteConnection.Table<User>().Count() > 2) 
+                if (_sqLiteConnection.Table<User>().Count() > 2)
                 {
                     listOfOption.Add("User");
                 }
@@ -170,7 +170,54 @@ namespace LawsForImpact.ViewModels
             }
 
         }
+        //private async void LoadData2()
+        //{
 
+        //    try
+        //    {
+        //        _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+        //        IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
+        //        List<IDataTable> listData;
 
+        //        switch (Global.notifTitle)
+        //        {
+        //            case "Power":
+        //                tableToEnumerable = _sqLiteConnection.Table<Power>().ToList();
+        //                break;
+        //            case "Mastery":
+        //                tableToEnumerable = _sqLiteConnection.Table<Mastery>().ToList();
+        //                break;
+        //            case "User":
+        //                tableToEnumerable = _sqLiteConnection.Table<User>().ToList();
+        //                break;
+        //            case "War":
+        //                tableToEnumerable = _sqLiteConnection.Table<War>().ToList();
+        //                break;
+        //            case "Friends":
+        //                tableToEnumerable = _sqLiteConnection.Table<Friends>().ToList();
+        //                break;
+        //            case "Human":
+        //                tableToEnumerable = _sqLiteConnection.Table<Human>().ToList();
+        //                break;
+        //        }
+
+        //        listData = tableToEnumerable.ToList();
+        //        boldHeaderTitle = Global.notifTitle;
+        //        lawIndex = listData[]
+        //        LawOrPrinciple = lawIndex.ToString();
+        //        HeaderTitle = getSQLElementPower.Title;
+        //        HeaderDescription = getSQLElementPower.Description;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //    }
+        //}
     }
 }
+    //var getSQLElementUser = _sqLiteConnection.Table<User>().ElementAt(randLawIndex);
+    //boldHeaderTitle = "User";
+    //                    lawIndex = getSQLElementUser.Law;
+    //                    LawOrPrinciple = lawIndex.ToString();
+    //                    HeaderTitle = getSQLElementUser.Title;
+    //                    HeaderDescription = getSQLElementUser.Description;
