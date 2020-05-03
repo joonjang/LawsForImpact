@@ -35,6 +35,7 @@ namespace LawsForImpact.Views
             BindingContext = viewModel;
         }
 
+
         private void Button_Clicked(object sender, EventArgs e)
         {
             viewModel.LoadData();

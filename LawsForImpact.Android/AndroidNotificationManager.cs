@@ -12,9 +12,14 @@ using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
 using Xamarin.Forms;
+using Application = Android.App.Application;
 using AndroidApp = Android.App.Application;
 using LawsForImpact.Models;
 using LawsForImpact.Services;
+using SQLite;
+using System.Xml.Serialization;
+using System.IO;
+
 
 // The Application class is defined in both the Xamarin.Forms and Android.App namespaces so 
 // the AndroidApp alias is defined in the using statements to differentiate the two.
@@ -35,9 +40,6 @@ namespace LawsForImpact.Droid
         bool channelInitialized = false;
         int messageId = -1;
         NotificationManager manager;
-        NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
-
-
 
         public event EventHandler NotificationReceived;
 
@@ -55,8 +57,6 @@ namespace LawsForImpact.Droid
 
             messageId++;
 
-            textStyle.BigText(message);
-
             Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
             intent.PutExtra(TitleKey, title);
             intent.PutExtra(MessageKey, message);
@@ -67,10 +67,9 @@ namespace LawsForImpact.Droid
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.xamarin_logo))
-                .SetSmallIcon(Resource.Drawable.xamarin_logo)
-                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
-                .SetStyle(textStyle);
+                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.ic_mtrl_chip_checked_circle))
+                .SetSmallIcon(Resource.Drawable.ic_mtrl_chip_close_circle)
+                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
 
             Notification notification = builder.Build();
             manager.Notify(messageId, notification);
@@ -105,4 +104,6 @@ namespace LawsForImpact.Droid
             channelInitialized = true;
         }
     }
+
+
 }

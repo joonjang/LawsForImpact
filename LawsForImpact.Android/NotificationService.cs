@@ -28,6 +28,26 @@ namespace LawsForImpact.Droid
         int _notificationIconId { get; set; }
         readonly DateTime _jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         internal string _randomNumber;
+        public const string TitleKey = "title";
+        public const string MessageKey = "message";
+
+        public event EventHandler NotificationReceived;
+
+        public void Initialize()
+        {
+            ScheduledAlarmHandler initScheduleNotiChannel = new ScheduledAlarmHandler();
+            initScheduleNotiChannel.CreateNotificationChannel();
+        }
+
+        public void ReceiveNotification(string title, string message)
+        {
+            var args = new NotificationEventArgs()
+            {
+                Title = title,
+                Message = message,
+            };
+            NotificationReceived?.Invoke(null, args);
+        }
 
         public void LocalNotification(int id, DateTime notifyTime, int queueIndex, SerializableDictionary<string, int> notificationQueue, bool randomToggle, long nextRepeat = 3000)
         {
@@ -38,7 +58,7 @@ namespace LawsForImpact.Droid
             long selectedRepeat = nextRepeat;
 
             // todo change to actual time, using 1ms for debugging
-            if (selectedInterval.EverydayToggle == true) 
+            if (selectedInterval.EverydayToggle == true)
             {
                 selectedRepeat = 1000;
                 // every 24 hr
@@ -47,19 +67,19 @@ namespace LawsForImpact.Droid
                 //// 1000ms -> 1s*60 = 60s -> 1m*60=60m -> 1h*24=24h
 
             }
-            else if(selectedInterval.OtherDayToggle == true)
+            else if (selectedInterval.OtherDayToggle == true)
             {
                 selectedRepeat = 1000;
                 //// every 48hr
                 //selectedRepeat = 1000 * 60 * 60 * 24 * 2; 
             }
-            else if(selectedInterval.WeeklyToggle == true)
+            else if (selectedInterval.WeeklyToggle == true)
             {
                 selectedRepeat = 1000;
                 //// every 168hr -> 1 week
                 //selectedRepeat = 1000 * 60 * 60 * 24 * 7;
             }
-            else if(selectedInterval.MonthlyToggle == true)
+            else if (selectedInterval.MonthlyToggle == true)
             {
                 selectedRepeat = 1000;
                 //// monthlys worth, 672 hrs, 28 days
@@ -68,7 +88,7 @@ namespace LawsForImpact.Droid
 
 
             long totalMilliSeconds = (long)(notifyTime.ToUniversalTime() - _jan1st1970).TotalMilliseconds;
-            if (totalMilliSeconds <JavaSystem.CurrentTimeMillis())
+            if (totalMilliSeconds < JavaSystem.CurrentTimeMillis())
             {
                 totalMilliSeconds = totalMilliSeconds + selectedRepeat;
             }
@@ -172,7 +192,7 @@ namespace LawsForImpact.Droid
         bool channelInitialized = false;
         NotificationManager manager;
         NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
-        SerializableDictionary<string,int> nQueue;
+        SerializableDictionary<string, int> nQueue;
 
 
         private SQLiteConnection _sqLiteConnection;
@@ -246,7 +266,7 @@ namespace LawsForImpact.Droid
             var notificationManager = NotificationManagerCompat.From(Application.Context);
             notificationManager.Notify(randomNumber, builder.Build());
 
-            Xamarin.Forms.DependencyService.Get<INotificationService>().LocalNotification(0,DateTime.Now, nextElementIndex, nQueue, randomBool, notification.RepeatInterval);
+            Xamarin.Forms.DependencyService.Get<INotificationService>().LocalNotification(0, DateTime.Now, nextElementIndex, nQueue, randomBool, notification.RepeatInterval);
         }
 
         private async void LoadData()
@@ -322,10 +342,10 @@ namespace LawsForImpact.Droid
 
             // index of next table
             nextElementIndex = currentElementIndex + 1;
-            
+
 
             // if next table index overflows that means its time to restart the table index and move up the notification index
-            if(nextElementIndex >= nQueue.Count)
+            if (nextElementIndex >= nQueue.Count)
             {
                 nextElementIndex = 0;
             }
@@ -386,7 +406,7 @@ namespace LawsForImpact.Droid
             }
         }
 
-        void CreateNotificationChannel()
+       public void CreateNotificationChannel()
         {
             manager = (NotificationManager)AndroidApp.Context.GetSystemService(AndroidApp.NotificationService);
 
@@ -401,18 +421,6 @@ namespace LawsForImpact.Droid
             }
 
             channelInitialized = true;
-        }
-
-
-        public event EventHandler NotificationReceived;
-        public void ReceiveNotification(string title, string message)
-        {
-            var args = new NotificationEventArgs()
-            {
-                Title = title,
-                Message = message,
-            };
-            NotificationReceived?.Invoke(null, args);
         }
 
     }

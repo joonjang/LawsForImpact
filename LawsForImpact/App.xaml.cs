@@ -10,13 +10,40 @@ namespace LawsForImpact
     public partial class App : Application
     {
 
+        /// <summary>
+        /// I have solved the issue of the app crashing when open the notification when the app is running in the foreground. I have 
+        /// isolated the issue be occuring from the Initilization of the MainPage. I have the initilization of the MainPage also cancels
+        /// all notification activity. That is an issue that I will need to solve. Once I sold that issue, I believe the notification
+        /// crashing would inadvertantly be solved as well as I belive they are linked.
+        /// </summary>
+
+
+
+        INotificationService notificationService;
         public App()
         {
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
+            DependencyService.Get<INotificationService>().Initialize();
             //MainPage = new DebugBackgroundCounter();
-            MainPage = new MainPage();
+
+            notificationService = DependencyService.Get<INotificationService>();
+            notificationService.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+                Global.notifTitle = evtData.Title;
+            };
+
+            if (Global.notifTitle != null)
+            {
+                MainPage = new ItemDetailPage();
+            }
+            else
+            {
+                MainPage = new MainPage();
+            }
+            
         }
 
         protected override void OnStart()

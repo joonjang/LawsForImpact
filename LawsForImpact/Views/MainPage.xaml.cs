@@ -1,4 +1,5 @@
 ﻿using LawsForImpact.Models;
+using LawsForImpact.Services;
 using System;
 using System.ComponentModel;
 using Xamarin.Forms;
@@ -11,9 +12,13 @@ namespace LawsForImpact.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : TabbedPage
     {
+
         public MainPage()
         {
-            InitializeComponent();
+
+                InitializeComponent();
+ 
+
             //if (Global.notifTitle != null)
             //{
             //    Navigation.PushAsync(new ItemDetailPage());
