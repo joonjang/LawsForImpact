@@ -17,10 +17,7 @@ namespace LawsForImpact.ViewModels
     public class NotificationViewModel : BaseViewModel
     {
         SerializableDictionary<string, int> nQueue = Global.notifQueue;
-        //                                                                                                  my new version
-        //INotificationManager notificationManager;
-        //                                                                                          old version
-        INotificationService notificationManager;
+
         public NotificationViewModel()
         {
 
@@ -42,6 +39,11 @@ namespace LawsForImpact.ViewModels
             humanCheck = Preferences.Get("Human", false);
             randomOff = Preferences.Get("RandomOff", true);
             randomOn = Preferences.Get("RandomOn", false);
+        }
+
+        private void SaveLocalNotification()
+        {
+            throw new NotImplementedException();
         }
 
         private string headerTitle;
@@ -115,44 +117,6 @@ namespace LawsForImpact.ViewModels
             }
         }
 
-
-        
-
-        void SaveLocalNotification()
-        {
-            var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
-            var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
-            var dateTime = date + " " + time;
-            var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
-
-            //                                                                                                          new version
-            //notificationManager = DependencyService.Get<INotificationManager>();
-            //                                                                                                           old version
-            notificationManager = DependencyService.Get<INotificationService>();
-
-            //                                                                                                                  new version
-            //notificationManager.NotificationReceived += (sender, eventArgs) =>
-            //{
-            //    var evtData = (NotificationEventArgs)eventArgs;
-            //    ShowNotification(evtData.Title, evtData.Message);
-            //};
-
-            //                                                                                                               new version
-            //notificationManager.ScheduleNotification("Power", "TEST fdsfds");
-            //                                                                                                                   old version
-            notificationManager.LocalNotification(0, selectedDateTime, 0, nQueue, RandomOn);
-            App.Current.MainPage.DisplayAlert("lets get the bread", "all i do is win", "fuck yeah");
-
-        }
-
-
-        void ShowNotification(string title, string message)
-        {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                Global.notifTitle = title;
-            });
-        }
 
         
 

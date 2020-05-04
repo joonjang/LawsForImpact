@@ -51,24 +51,10 @@ namespace LawsForImpact.Droid
             ////alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 1 * 1000, 1000, pending);
             ////alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, SystemClock.ElapsedRealtime() + 1 * 1000, pending);
 
-            CreateNotificationFromIntent(Intent);
+     
         }
 
-        protected override void OnNewIntent(Intent intent)
-        {
-            CreateNotificationFromIntent(intent);
-        }
-
-        void CreateNotificationFromIntent(Intent intent)
-        {
-            if (intent?.Extras != null)
-            {
-                string title = intent.Extras.GetString(LawsForImpact.Droid.NotificationService.TitleKey);
-                string message = intent.Extras.GetString(LawsForImpact.Droid.NotificationService.MessageKey);
-
-                DependencyService.Get<INotificationService>().ReceiveNotification(title, message);
-            }
-        }
+      
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

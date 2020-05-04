@@ -16,17 +16,13 @@ namespace LawsForImpact.Views
 
     public partial class NotificationPage : ContentPage
     {
-		INotificationManager notificationManager;
+	
 		public NotificationPage()
         {
 			BindingContext = new NotificationViewModel();
 			InitializeComponent();
 
-			notificationManager = DependencyService.Get<INotificationManager>();
-			notificationManager.NotificationReceived += (sender, eventArgs) =>
-			{
-				var evtData = (NotificationEventArgs)eventArgs;
-			};
+			
 		}
 		// todo make set time and date show based off check box chosen
 		protected override void OnAppearing()

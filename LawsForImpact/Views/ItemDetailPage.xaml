@@ -18,8 +18,10 @@
         <Label Text="{Binding HeaderTitle}" d:Text="Item name" FontAttributes="Bold"/>
         <Label Text="{Binding HeaderDescription}" d:Text="Item description"/>
         <Button VerticalOptions="EndAndExpand" Text="Refresh" Clicked="Button_Clicked"/>
+
         
-    </StackLayout>
+
+        </StackLayout>
     </ScrollView>
 
 

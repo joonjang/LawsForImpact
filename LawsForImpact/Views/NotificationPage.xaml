@@ -14,7 +14,10 @@
     <ScrollView>
     <StackLayout  Padding="25,10,25,30" >
 
-        <StackLayout>
+
+            <Label HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="Coming soon!" FontSize="25"/>
+
+            <!--<StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Label Text="Personal Input" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
                 <CheckBox IsChecked="{Binding UserCheck}" HorizontalOptions="EndAndExpand"/>
@@ -102,7 +105,7 @@
                 <Grid Grid.Row="5">
                     <Button Text="Cancel" Command="{Binding CancelCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
                 </Grid>
-            </StackLayout>
+            </StackLayout>-->
 
     </StackLayout>
     </ScrollView>

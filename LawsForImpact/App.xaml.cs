@@ -19,36 +19,15 @@ namespace LawsForImpact
 
 
 
-        INotificationService notificationService;
+        
         public App()
         {
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            DependencyService.Get<INotificationService>().Initialize();
-            //MainPage = new DebugBackgroundCounter();
 
-            notificationService = DependencyService.Get<INotificationService>();
-            notificationService.NotificationReceived += (sender, eventArgs) =>
-            {
-                var evtData = (NotificationEventArgs)eventArgs;
-                Global.notifTitle = evtData.Title;
-                Global.notifDescription = evtData.Message;
-            };
-
-            if (Global.notifTitle != null)
-            {
-                string tmp = Global.notifDescription;
-                int tmp1 = Global.notifCurrentIndex;
-                string tmp2 = Global.notifFullDescrip;
-                string tmp3 = Global.notifCurrentTitle;
-
-                MainPage = new ItemDetailPage();
-            }
-            else
-            {
-                MainPage = new MainPage();
-            }
+            MainPage = new MainPage();
+            
             
         }
 

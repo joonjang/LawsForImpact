@@ -5,6 +5,7 @@ using Xamarin.Forms.Xaml;
 
 using LawsForImpact.Models;
 using LawsForImpact.ViewModels;
+using LawsForImpact.Services;
 
 namespace LawsForImpact.Views
 {
@@ -14,11 +15,13 @@ namespace LawsForImpact.Views
     public partial class ItemDetailPage : ContentPage
     {
         ItemDetailViewModel viewModel;
+   
 
         public ItemDetailPage()
         {
             // starting 'Today' page, loads up a random element from the database
             InitializeComponent();
+
 
             viewModel = new ItemDetailViewModel
             {
@@ -34,7 +37,7 @@ namespace LawsForImpact.Views
 
             BindingContext = viewModel;
         }
-
+      
 
         private void Button_Clicked(object sender, EventArgs e)
         {
