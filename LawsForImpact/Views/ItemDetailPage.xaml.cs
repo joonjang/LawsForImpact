@@ -14,7 +14,7 @@ namespace LawsForImpact.Views
     [DesignTimeVisible(false)]
     public partial class ItemDetailPage : ContentPage
     {
-        ItemDetailViewModel viewModel;
+        public ItemDetailViewModel viewModel;
    
 
         public ItemDetailPage()

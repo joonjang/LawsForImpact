@@ -46,25 +46,15 @@ namespace LawsForImpact.ViewModels
 
 
             notificationManager = DependencyService.Get<INotificationManager>();
-            notificationManager.NotificationReceived += (sender, eventArgs) =>
-            {
-                var evtData = (NotificationEventArgs)eventArgs;
-                ShowNotification(evtData.Title, evtData.Message);
-            };
+
         }
 
-        void ShowNotification(string title, string message)
-        {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                var msg = $"Notification Received:\nTitle: {title}\nMessage: {message}";
 
-                TestNotificationLabel = msg;
-            });
-        }
 
         private void SaveLocalNotification()
         {
+
+            /// delete //////////////////////////////////////////////////////////////////////////////
             notificationNumber++;
             string title = $"Local Notification #{notificationNumber}";
             string message = $"You have now received {notificationNumber} notifications!";
@@ -72,10 +62,13 @@ namespace LawsForImpact.ViewModels
             // what triggers notification creation
             notificationManager.ScheduleNotification(title, message);
             // should set repeat
-            notificationManager.RepeatAlarmSet();
+
+            ItemDetailPage tmp = new ItemDetailPage();
+            tmp.viewModel.HeaderDescription = "dsadsads";
+            // delete .............................................................
 
 
-            notificationManager.SavedInfo(nQueue, 0, 0, false, 3000);
+            //notificationManager.SavedInfo(nQueue, 0, 0, false, 3000);
 
             TestNotificationLabel = "notification has been clicked ";
         }

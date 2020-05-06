@@ -41,6 +41,9 @@ namespace LawsForImpact.Droid
         NotificationManager manager;
 
         public event EventHandler NotificationReceived;
+        string currentTitle;
+        bool randomBool;
+        SerializableDictionary<string, int> nQueue;
 
         public void Initialize()
         {
@@ -79,10 +82,6 @@ namespace LawsForImpact.Droid
             return messageId;
         }
 
-        public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, int index, bool randomTog, int repeatInterval)
-        {
-
-        }
 
         public void ReceiveNotification(string title, string message)
         {
@@ -131,85 +130,93 @@ namespace LawsForImpact.Droid
             return alarmManager;
         }
 
-        private async void LoadData()
-        {
 
-            //SOLVED: go over how inherited base interface can become the generic list 
-            // so far IEnumerable can hold the different list type, but why
-            // enumerable is just a general blanket of lazily getting information, converting that to a more 
-            // structured type seemed to do the trick
-            _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-            IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
-            List<IDataTable> listData;
+        //public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, int index, bool randomTog, int repeatInterval)
+        //{
+        //    currentTitle = pickedQueue.ElementAt(queueIndex).Key;
+        //    randomBool = randomTog;
+        //    nQueue = pickedQueue;
+        //}
 
-            switch (currentTitle)
-            {
-                case "Power":
-                    tableToEnumerable = _sqLiteConnection.Table<Power>().ToList();
-                    break;
-                case "Mastery":
-                    tableToEnumerable = _sqLiteConnection.Table<Mastery>().ToList();
-                    break;
-                case "User":
-                    tableToEnumerable = _sqLiteConnection.Table<User>().ToList();
-                    break;
-                case "War":
-                    tableToEnumerable = _sqLiteConnection.Table<War>().ToList();
-                    break;
-                case "Friends":
-                    tableToEnumerable = _sqLiteConnection.Table<Friends>().ToList();
-                    break;
-                case "Human":
-                    tableToEnumerable = _sqLiteConnection.Table<Human>().ToList();
-                    break;
-            }
-            listData = tableToEnumerable.ToList();
+        //private async void LoadData()
+        //{
 
+        //    //SOLVED: go over how inherited base interface can become the generic list 
+        //    // so far IEnumerable can hold the different list type, but why
+        //    // enumerable is just a general blanket of lazily getting information, converting that to a more 
+        //    // structured type seemed to do the trick
+        //    _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+        //    IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
+        //    List<IDataTable> listData;
 
-            int tmp = nQueue[currentTitle];
-
-            int index = listData.Count() - nQueue[currentTitle];
-            index = index - 1;
-
-
-            // if random enabled
-            if (randomBool)
-            {
-                Random random = new Random();
-                index = random.Next(0, listData.Count());
-            }
+        //    switch (currentTitle)
+        //    {
+        //        case "Power":
+        //            tableToEnumerable = _sqLiteConnection.Table<Power>().ToList();
+        //            break;
+        //        case "Mastery":
+        //            tableToEnumerable = _sqLiteConnection.Table<Mastery>().ToList();
+        //            break;
+        //        case "User":
+        //            tableToEnumerable = _sqLiteConnection.Table<User>().ToList();
+        //            break;
+        //        case "War":
+        //            tableToEnumerable = _sqLiteConnection.Table<War>().ToList();
+        //            break;
+        //        case "Friends":
+        //            tableToEnumerable = _sqLiteConnection.Table<Friends>().ToList();
+        //            break;
+        //        case "Human":
+        //            tableToEnumerable = _sqLiteConnection.Table<Human>().ToList();
+        //            break;
+        //    }
+        //    listData = tableToEnumerable.ToList();
 
 
-            // sets all the current notification information
-            title = listData[index].Title;
-            message = listData[index].Description;
+        //    int tmp = nQueue[currentTitle];
 
-            //logic for next notification
-
-
-            // subtract the queue int of current notification subject to keep track of next index
-            nQueue[currentTitle] = nQueue[currentTitle] - 1;
-
-            // check for index overflow
-            if (nQueue[currentTitle] < 0)
-            {
-                nQueue[currentTitle] = listData.Count() - 1;
-            }
+        //    int index = listData.Count() - nQueue[currentTitle];
+        //    index = index - 1;
 
 
-            // index of next table
-            nextElementIndex = currentElementIndex + 1;
+        //    // if random enabled
+        //    if (randomBool)
+        //    {
+        //        Random random = new Random();
+        //        index = random.Next(0, listData.Count());
+        //    }
 
 
-            // if next table index overflows that means its time to restart the table index and move up the notification index
-            if (nextElementIndex >= nQueue.Count)
-            {
-                nextElementIndex = 0;
-            }
+        //    // sets all the current notification information
+        //    title = listData[index].Title;
+        //    message = listData[index].Description;
+
+        //    //logic for next notification
 
 
-            nextNotifTableName = nQueue.ElementAt(nextElementIndex).Key;
+        //    // subtract the queue int of current notification subject to keep track of next index
+        //    nQueue[currentTitle] = nQueue[currentTitle] - 1;
 
-        }
+        //    // check for index overflow
+        //    if (nQueue[currentTitle] < 0)
+        //    {
+        //        nQueue[currentTitle] = listData.Count() - 1;
+        //    }
+
+
+        //    // index of next table
+        //    nextElementIndex = currentElementIndex + 1;
+
+
+        //    // if next table index overflows that means its time to restart the table index and move up the notification index
+        //    if (nextElementIndex >= nQueue.Count)
+        //    {
+        //        nextElementIndex = 0;
+        //    }
+
+
+        //    nextNotifTableName = nQueue.ElementAt(nextElementIndex).Key;
+
+        //}
     }
 }

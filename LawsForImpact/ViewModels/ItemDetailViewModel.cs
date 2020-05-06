@@ -11,10 +11,31 @@ namespace LawsForImpact.ViewModels
     public class ItemDetailViewModel : BaseViewModel
     {
         private SQLiteConnection _sqLiteConnection;
+        INotificationManager notificationManager;
         public ItemDetailViewModel()
         {
             Title = "Summary";
+
+
+            notificationManager = DependencyService.Get<INotificationManager>();
+            notificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+                ShowNotification(evtData.Title, evtData.Message);
+            };
         }
+
+        void ShowNotification(string title, string message)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var msg = $"Notification Received:\nTitle: {title}\nMessage: {message}";
+
+                HeaderTitle = msg;
+            });
+        }
+
+
         private string headerTitle;
         public string HeaderTitle
         {
