@@ -10,13 +10,16 @@ using System.Globalization;
 using LawsForImpact.Models;
 using System.Linq;
 using SQLite;
+using LawsForImpact.Views;
 
 namespace LawsForImpact.ViewModels
 {
     // todo make save show up only once iteration is pressed
     public class NotificationViewModel : BaseViewModel
     {
-        SerializableDictionary<string, int> nQueue = Global.notifQueue;
+        SerializableDictionary<string, int> nQueue = new SerializableDictionary<string, int>();
+        INotificationManager notificationManager;
+        int notificationNumber = 0;
 
         public NotificationViewModel()
         {
@@ -39,12 +42,61 @@ namespace LawsForImpact.ViewModels
             humanCheck = Preferences.Get("Human", false);
             randomOff = Preferences.Get("RandomOff", true);
             randomOn = Preferences.Get("RandomOn", false);
+
+
+
+            notificationManager = DependencyService.Get<INotificationManager>();
+            notificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+                ShowNotification(evtData.Title, evtData.Message);
+            };
+        }
+
+        void ShowNotification(string title, string message)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var msg = $"Notification Received:\nTitle: {title}\nMessage: {message}";
+
+                TestNotificationLabel = msg;
+            });
         }
 
         private void SaveLocalNotification()
         {
-            throw new NotImplementedException();
+            notificationNumber++;
+            string title = $"Local Notification #{notificationNumber}";
+            string message = $"You have now received {notificationNumber} notifications!";
+
+            // what triggers notification creation
+            notificationManager.ScheduleNotification(title, message);
+            // should set repeat
+            notificationManager.RepeatAlarmSet();
+
+
+            notificationManager.SavedInfo(nQueue, 0, 0, false, 3000);
+
+            TestNotificationLabel = "notification has been clicked ";
         }
+
+        private string testNotificationLabel;
+        public string TestNotificationLabel
+        {
+            get { return testNotificationLabel; }
+            set
+            {
+                testNotificationLabel = value;
+                OnPropertyChanged(nameof(TestNotificationLabel));
+            }
+        }
+
+
+
+
+
+
+
 
         private string headerTitle;
         public string HeaderTitle

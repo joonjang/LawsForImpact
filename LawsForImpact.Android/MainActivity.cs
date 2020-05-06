@@ -37,24 +37,44 @@ namespace LawsForImpact.Droid
 
             LoadApplication(new App());
 
-            ////var intent = new Intent(this, typeof(PeriodicService));
-            ////StartService(intent);
+            CreateNotificationFromIntent(Intent);
 
-            //var alarmIntent = new Intent(this, typeof(BackgroundReceiver));
 
-            //var pending = PendingIntent.GetBroadcast(this, 0, alarmIntent, PendingIntentFlags.UpdateCurrent);
 
-            //var alarmManager = GetSystemService(AlarmService).JavaCast<AlarmManager>();
-            ////AlarmManager alarmManager = (AlarmManager)GetSystemService(Context.AlarmService);
 
-            //alarmManager.SetRepeating(AlarmType.RtcWakeup, 1, 1, pending);
-            ////alarmManager.SetInexactRepeating(AlarmType.ElapsedRealtime, SystemClock.ElapsedRealtime() + 1 * 1000, 1000, pending);
-            ////alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, SystemClock.ElapsedRealtime() + 1 * 1000, pending);
 
-     
+            ////GET TIME IN SECONDS AND INITIALIZE INTENT
+            //int time = 1000;
+            //Intent i = new Intent(this, typeof(AndroidNotificationManager));
+
+            ////PASS CONTEXT,YOUR PRIVATE REQUEST CODE,INTENT OBJECT AND FLAG
+            //PendingIntent pi = PendingIntent.GetBroadcast(this, 0, i, 0);
+
+            ////INITIALIZE ALARM MANAGER
+            //AlarmManager alarmManager = (AlarmManager)GetSystemService(AlarmService);
+
+            ////SET THE ALARM
+            //alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 1000, pi);
+            
         }
 
-      
+        protected override void OnNewIntent(Intent intent)
+        {
+            CreateNotificationFromIntent(intent);
+        }
+
+        void CreateNotificationFromIntent(Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                string title = intent.Extras.GetString(AndroidNotificationManager.TitleKey);
+                string message = intent.Extras.GetString(AndroidNotificationManager.MessageKey);
+
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+            }
+        }
+
+
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

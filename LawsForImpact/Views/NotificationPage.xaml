@@ -15,10 +15,11 @@
     <StackLayout  Padding="25,10,25,30" >
 
 
-            <Label HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="Coming soon!" FontSize="25"/>
+            <StackLayout>
 
-            <!--<StackLayout>
-            <StackLayout Orientation="Horizontal">
+                <Label Text="{Binding TestNotificationLabel}" d:Text="blank" FontSize="25" HorizontalOptions="Center" />
+
+                <StackLayout Orientation="Horizontal">
                 <Label Text="Personal Input" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
                 <CheckBox IsChecked="{Binding UserCheck}" HorizontalOptions="EndAndExpand"/>
             </StackLayout>
@@ -105,7 +106,7 @@
                 <Grid Grid.Row="5">
                     <Button Text="Cancel" Command="{Binding CancelCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
                 </Grid>
-            </StackLayout>-->
+            </StackLayout>
 
     </StackLayout>
     </ScrollView>

@@ -16,21 +16,18 @@ namespace LawsForImpact.Views
 
     public partial class NotificationPage : ContentPage
     {
-	
+		
 		public NotificationPage()
         {
 			BindingContext = new NotificationViewModel();
 			InitializeComponent();
 
-			
 		}
 		// todo make set time and date show based off check box chosen
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
 		}
-
-
-
+	
 	}
 }
