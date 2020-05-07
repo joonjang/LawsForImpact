@@ -22,6 +22,7 @@ using Java.Lang;
 using SQLite;
 using System.IO;
 using System.Xml.Serialization;
+using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
 
 [assembly: Dependency(typeof(LawsForImpact.Droid.AndroidNotificationManager))]
 namespace LawsForImpact.Droid
@@ -61,25 +62,39 @@ namespace LawsForImpact.Droid
             }
 
             messageId++;
-
+            // stackbuilder https://stackoverflow.com/questions/36912325/why-do-we-use-the-taskstackbuilder
 
             // 1 MainActivity intent allows MainActivity to change once notification tapped
             Intent intentMain = new Intent(AndroidApp.Context, typeof(MainActivity));
             // 2 the alarm repeater
             Intent intentAndroid = new Intent(AndroidApp.Context, typeof(AndroidNotificationManager));
 
+            //var serializedNotification = SerializeNotification(savedInfo);
+            //intentAndroid.PutExtra(LocalNotificationKey, serializedNotification);
+
+            //var pendingIntentAndroid = PendingIntent.GetBroadcast(Application.Context, 0, intentAndroid, PendingIntentFlags.UpdateCurrent);
+            //var alarmManager = GetAlarmManager();
+            //alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 3000, pendingIntentAndroid);
 
             intentMain.PutExtra(TitleKey, title);
             intentMain.PutExtra(MessageKey, message);
 
+            TaskStackBuilder stackBuilder = TaskStackBuilder.Create(Application.Context);
+            stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
+            stackBuilder.AddNextIntent(intentMain);
+            stackBuilder.AddNextIntent(intentAndroid);
 
-            var serializedNotification = SerializeNotification(savedInfo);
-            intentAndroid.PutExtra(LocalNotificationKey, serializedNotification);
 
-            PendingIntent pendingIntentMain = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intentMain, PendingIntentFlags.UpdateCurrent);
+            
+
+            //var serializedNotification = SerializeNotification(savedInfo);
+            //intentAndroid.PutExtra(LocalNotificationKey, serializedNotification);
+
+            //PendingIntent pendingIntentMain = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intentMain, PendingIntentFlags.UpdateCurrent);
+            PendingIntent pendingIntent = stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.UpdateCurrent);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
-                .SetContentIntent(pendingIntentMain)
+                .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
                 .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.ic_mtrl_chip_checked_circle))
@@ -89,15 +104,9 @@ namespace LawsForImpact.Droid
             Notification notification = builder.Build();
             manager.Notify(messageId, notification);
 
-            var pendingIntentAndroid = PendingIntent.GetBroadcast(Application.Context, 0, intentAndroid, PendingIntentFlags.Immutable);
-            var alarmManager = GetAlarmManager();
-            // todo change variable of alarm manager
-            //totalMilliSeconds, repeateForMinute
-            alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 3000, pendingIntentAndroid);
-        
 
-            ///////0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-            //var resultIntent = AndroidNotificationManager.GetLauncherActivity();
+            /////////0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+            //var resultIntent = GetLauncherActivity();
             //resultIntent.SetFlags(ActivityFlags.NewTask | ActivityFlags.ClearTask);
             //var stackBuilder = Android.Support.V4.App.TaskStackBuilder.Create(Application.Context);
             //stackBuilder.AddNextIntent(resultIntent);
@@ -108,41 +117,20 @@ namespace LawsForImpact.Droid
 
             //// Sending notification    
             //var notificationManager = NotificationManagerCompat.From(Application.Context);
-            //notificationManager.Notify(0, builder.Build());
+            //notificationManager.Notify(messageId, builder.Build());
 
             //Xamarin.Forms.DependencyService.Get<INotificationManager>().SavedInfo(new SerializableDictionary<string, int>() { { "Power", 0 } }, 0, 0, false, 3000);
-            //////--------------------------------------------------------------------------------------------------------------------------------------------------------------
+            ////////--------------------------------------------------------------------------------------------------------------------------------------------------------------
+            ///
+
 
             return messageId;
         }
 
 
-        public void ReceiveNotification(string title, string message)
-        {
-            var args = new NotificationEventArgs()
-            {
-                Title = title,
-                Message = message,
-            };
-            NotificationReceived?.Invoke(null, args);
-        }
+        
 
-        void CreateNotificationChannel()
-        {
-            manager = (NotificationManager)AndroidApp.Context.GetSystemService(AndroidApp.NotificationService);
-
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-            {
-                var channelNameJava = new Java.Lang.String(channelName);
-                var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
-                {
-                    Description = channelDescription
-                };
-                manager.CreateNotificationChannel(channel);
-            }
-
-            channelInitialized = true;
-        }
+        
 
         public override void OnReceive(Context context, Intent intent)
         {
@@ -158,43 +146,22 @@ namespace LawsForImpact.Droid
             SavedInfo(queue, queueIndex, index, randTog, repInterval);
         }
 
-        private string SerializeNotification(SavedInformation notification)
-        {
-
-            var xmlSerializer = new XmlSerializer(notification.GetType());
-
-            using (var stringWriter = new StringWriter())
-            {
-                xmlSerializer.Serialize(stringWriter, notification);
-                return stringWriter.ToString();
-            }
-        }
-
-        private SavedInformation DeserializeNotification(string notificationString)
-        {
-
-            var xmlSerializer = new XmlSerializer(typeof(SavedInformation));
-            using (var stringReader = new StringReader(notificationString))
-            {
-                var notification = (SavedInformation)xmlSerializer.Deserialize(stringReader);
-                return notification;
-            }
-        }
+        
 
         public void RepeatAlarmSet()
         {
             Intent intent = new Intent(Application.Context, typeof(AndroidNotificationManager));
-            var pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.Immutable);
+            var serializedNotification = SerializeNotification(savedInfo);
+            intent.PutExtra(LocalNotificationKey, serializedNotification);
+
+            // this is not serializing to the correct intent it seems
+
+            var pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
             var alarmManager = GetAlarmManager();
             alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 30000, pendingIntent);
         }
 
-        private AlarmManager GetAlarmManager()
-        {
-
-            var alarmManager = Application.Context.GetSystemService(Context.AlarmService) as AlarmManager;
-            return alarmManager;
-        }
+        
 
 
         public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, int index, bool randomTog, int repeatInterval)
@@ -209,16 +176,11 @@ namespace LawsForImpact.Droid
             savedInfo.RepeatInterval = repeatInterval;
 
             LoadData();
-
+            RepeatAlarmSet();
         }
 
         private async void LoadData()
         {
-
-            //SOLVED: go over how inherited base interface can become the generic list 
-            // so far IEnumerable can hold the different list type, but why
-            // enumerable is just a general blanket of lazily getting information, converting that to a more 
-            // structured type seemed to do the trick
             _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
             IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
             List<IDataTable> listData;
@@ -246,10 +208,9 @@ namespace LawsForImpact.Droid
             }
             listData = tableToEnumerable.ToList();
 
-
-
             int index = listData.Count() - savedInfo.QueueOfSaved[currentTitle];
             index = index - 1;
+
 
 
             // if random enabled
@@ -260,7 +221,7 @@ namespace LawsForImpact.Droid
             }
 
 
-            // sets all the current notification information
+            //sets all the current notification information
             string title = listData[index].Title;
             string message = listData[index].Description;
 
@@ -288,6 +249,75 @@ namespace LawsForImpact.Droid
             }
 
             ScheduleNotification(title, message);
+        }
+
+
+
+
+
+
+
+        public void ReceiveNotification(string title, string message)
+        {
+            var args = new NotificationEventArgs()
+            {
+                Title = title,
+                Message = message,
+            };
+            NotificationReceived?.Invoke(null, args);
+        }
+
+        public static Intent GetLauncherActivity()
+        {
+
+            var packageName = Application.Context.PackageName;
+            return Application.Context.PackageManager.GetLaunchIntentForPackage(packageName);
+        }
+
+        void CreateNotificationChannel()
+        {
+            manager = (NotificationManager)AndroidApp.Context.GetSystemService(AndroidApp.NotificationService);
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                var channelNameJava = new Java.Lang.String(channelName);
+                var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
+                {
+                    Description = channelDescription
+                };
+                manager.CreateNotificationChannel(channel);
+            }
+
+            channelInitialized = true;
+        }
+
+        private string SerializeNotification(SavedInformation notification)
+        {
+
+            var xmlSerializer = new XmlSerializer(notification.GetType());
+
+            using (var stringWriter = new StringWriter())
+            {
+                xmlSerializer.Serialize(stringWriter, notification);
+                return stringWriter.ToString();
+            }
+        }
+
+        private SavedInformation DeserializeNotification(string notificationString)
+        {
+
+            var xmlSerializer = new XmlSerializer(typeof(SavedInformation));
+            using (var stringReader = new StringReader(notificationString))
+            {
+                var notification = (SavedInformation)xmlSerializer.Deserialize(stringReader);
+                return notification;
+            }
+        }
+
+        private AlarmManager GetAlarmManager()
+        {
+            var alarmManager = Application.Context.GetSystemService(Context.AlarmService) as AlarmManager;
+            return alarmManager;
         }
     }
 }

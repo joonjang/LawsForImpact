@@ -39,22 +39,6 @@ namespace LawsForImpact.Droid
 
             CreateNotificationFromIntent(Intent);
 
-
-
-
-
-            ////GET TIME IN SECONDS AND INITIALIZE INTENT
-            //int time = 1000;
-            //Intent i = new Intent(this, typeof(AndroidNotificationManager));
-
-            ////PASS CONTEXT,YOUR PRIVATE REQUEST CODE,INTENT OBJECT AND FLAG
-            //PendingIntent pi = PendingIntent.GetBroadcast(this, 0, i, 0);
-
-            ////INITIALIZE ALARM MANAGER
-            //AlarmManager alarmManager = (AlarmManager)GetSystemService(AlarmService);
-
-            ////SET THE ALARM
-            //alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 1000, pi);
             
         }
 
