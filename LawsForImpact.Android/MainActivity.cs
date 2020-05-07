@@ -51,10 +51,10 @@ namespace LawsForImpact.Droid
         {
             if (intent?.Extras != null)
             {
-                string title = intent.Extras.GetString(AndroidNotificationManager.TitleKey);
-                string message = intent.Extras.GetString(AndroidNotificationManager.MessageKey);
+                string tableKey = intent.Extras.GetString(AndroidNotificationManager.TableKey);
+                int indexKey = intent.Extras.GetInt(AndroidNotificationManager.IndexKey);
 
-                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+                DependencyService.Get<INotificationManager>().ReceiveNotification(tableKey, indexKey);
             }
         }
 

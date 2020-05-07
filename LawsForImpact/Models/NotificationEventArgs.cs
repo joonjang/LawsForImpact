@@ -6,7 +6,7 @@ namespace LawsForImpact.Models
 {
     public class NotificationEventArgs : EventArgs
     {
-        public string Title { get; set; }
-        public string Message { get; set; }
+        public string Table { get; set; }
+        public int Index { get; set; }
     }
 }

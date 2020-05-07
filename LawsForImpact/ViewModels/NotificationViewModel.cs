@@ -53,7 +53,7 @@ namespace LawsForImpact.ViewModels
         private void SaveLocalNotification()
         {
 
-            notificationManager.SavedInfo(nQueue, 0, 0, false, 3000);
+            notificationManager.SavedInfo(nQueue, 0, false, 3000);
 
         }
 

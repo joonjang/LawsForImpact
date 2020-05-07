@@ -12,6 +12,9 @@ namespace LawsForImpact.ViewModels
     {
         private SQLiteConnection _sqLiteConnection;
         INotificationManager notificationManager;
+        string tableSwitch;
+        int indexTable = -1;
+        bool fromNotification = false;
         public ItemDetailViewModel()
         {
             Title = "Summary";
@@ -21,17 +24,19 @@ namespace LawsForImpact.ViewModels
             notificationManager.NotificationReceived += (sender, eventArgs) =>
             {
                 var evtData = (NotificationEventArgs)eventArgs;
-                ShowNotification(evtData.Title, evtData.Message);
+                ShowNotification(evtData.Table, evtData.Index);
             };
         }
 
-        void ShowNotification(string title, string message)
+        void ShowNotification(string table, int index)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                var msg = $"Notification Received:\nTitle: {title}\nMessage: {message}";
-
-                HeaderTitle = msg;
+                tableSwitch = table;
+                indexTable = index;
+                fromNotification = true;
+                LoadData();
+                
             });
         }
 
@@ -97,101 +102,8 @@ namespace LawsForImpact.ViewModels
 
             return tmp;
         }
-
-        string boldHeaderTitle = Global.notifCurrentTitle;
-
-        //public async void LoadData()
-        //{
-        //    try
-        //    {
-        //        // where the database gets populated
-        //        _sqLiteConnection = await DependencyService.Get<ISQLite>().GetConnection();
-        //        int numberOfLaws;
-        //        int randLawIndex;
-        //        int lawIndex;
-        //        List<string> listOfOption = new List<string>() { "Power", "Mastery", "War", "Friends", "Human" };
-
-        //        Random rand = new Random();
-
-        //        if (_sqLiteConnection.Table<User>().Count() > 1)
-        //        {
-        //            listOfOption.Add("User");
-        //        }
-
-        //        int index = rand.Next(listOfOption.Count);
-
-        //        switch (listOfOption[index])
-        //        {
-        //            case "Power":
-        //                numberOfLaws = _sqLiteConnection.Table<Power>().Count();
-        //                randLawIndex = rand.Next(numberOfLaws);
-        //                var getSQLElementPower = _sqLiteConnection.Table<Power>().ElementAt(randLawIndex);
-        //                boldHeaderTitle = "Power";
-        //                lawIndex = getSQLElementPower.Law;
-        //                LawOrPrinciple = lawIndex.ToString();
-        //                HeaderTitle = getSQLElementPower.Title;
-        //                HeaderDescription = getSQLElementPower.Description;
-        //                break;
-        //            case "Mastery":
-        //                numberOfLaws = _sqLiteConnection.Table<Mastery>().Count();
-        //                randLawIndex = rand.Next(numberOfLaws);
-        //                var getSQLElementMastery = _sqLiteConnection.Table<Mastery>().ElementAt(randLawIndex);
-        //                boldHeaderTitle = "Mastery";
-        //                lawIndex = getSQLElementMastery.Law;
-        //                LawOrPrinciple = lawIndex.ToString();
-        //                HeaderTitle = getSQLElementMastery.Title;
-        //                HeaderDescription = getSQLElementMastery.Description;
-        //                break;
-        //            case "War":
-        //                numberOfLaws = _sqLiteConnection.Table<War>().Count();
-        //                randLawIndex = rand.Next(numberOfLaws);
-        //                var getSQLElementWar = _sqLiteConnection.Table<War>().ElementAt(randLawIndex);
-        //                boldHeaderTitle = "War";
-        //                lawIndex = getSQLElementWar.Law;
-        //                LawOrPrinciple = lawIndex.ToString();
-        //                HeaderTitle = getSQLElementWar.Title;
-        //                HeaderDescription = getSQLElementWar.Description;
-        //                break;
-        //            case "Friends":
-        //                numberOfLaws = _sqLiteConnection.Table<Friends>().Count();
-        //                randLawIndex = rand.Next(numberOfLaws);
-        //                var getSQLElementFriends = _sqLiteConnection.Table<Friends>().ElementAt(randLawIndex);
-        //                boldHeaderTitle = "Friends";
-        //                lawIndex = getSQLElementFriends.Law;
-        //                LawOrPrinciple = lawIndex.ToString();
-        //                HeaderTitle = getSQLElementFriends.Title;
-        //                HeaderDescription = getSQLElementFriends.Description;
-        //                break;
-        //            case "Human":
-        //                numberOfLaws = _sqLiteConnection.Table<Human>().Count();
-        //                randLawIndex = rand.Next(numberOfLaws);
-        //                var getSQLElementHuman = _sqLiteConnection.Table<Human>().ElementAt(randLawIndex);
-        //                boldHeaderTitle = "Human";
-        //                lawIndex = getSQLElementHuman.Law;
-        //                LawOrPrinciple = lawIndex.ToString();
-        //                HeaderTitle = getSQLElementHuman.Title;
-        //                HeaderDescription = getSQLElementHuman.Description;
-        //                break;
-        //            case "User":
-        //                numberOfLaws = _sqLiteConnection.Table<User>().Count();
-        //                randLawIndex = rand.Next(numberOfLaws);
-        //                var getSQLElementUser = _sqLiteConnection.Table<User>().ElementAt(randLawIndex);
-        //                boldHeaderTitle = "User";
-        //                lawIndex = getSQLElementUser.Law;
-        //                LawOrPrinciple = lawIndex.ToString();
-        //                HeaderTitle = getSQLElementUser.Title;
-        //                HeaderDescription = getSQLElementUser.Description;
-        //                break;
-
-        //        }
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //    }
-
-        //}
+        //  = Global.notifCurrentTitle
+        string boldHeaderTitle;
 
         public async void LoadData()
         {
@@ -201,19 +113,25 @@ namespace LawsForImpact.ViewModels
                 _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
                 IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
                 List<IDataTable> listData;
-
-                List<string> listOfOption = new List<string>() { "Power", "Mastery", "War", "Friends", "Human" };
-
                 Random rand = new Random();
-
+                int randLawIndex;
+                List<string> listOfOption = new List<string>() { "Power", "Mastery", "War", "Friends", "Human" };
                 if (_sqLiteConnection.Table<User>().Count() > 1)
                 {
                     listOfOption.Add("User");
                 }
 
-                int index = rand.Next(listOfOption.Count);
+                // if not tapped from notification
+                if (!fromNotification)
+                {
+                    // random number out of current selection
+                    indexTable = rand.Next(listOfOption.Count);
 
-                switch (listOfOption[index])
+                    // random table from random number generated by indexTable
+                    tableSwitch = listOfOption[indexTable];
+                }
+
+                switch (tableSwitch)
                 {
                     case "Power":
                         tableToEnumerable = _sqLiteConnection.Table<Power>().ToList();
@@ -234,11 +152,24 @@ namespace LawsForImpact.ViewModels
                         tableToEnumerable = _sqLiteConnection.Table<Human>().ToList();
                         break;
                 }
+                
 
                 listData = tableToEnumerable.ToList();
-                boldHeaderTitle = listOfOption[index];
-                int randLawIndex = rand.Next(listData.Count());
-                LawOrPrinciple = listData[randLawIndex].Law.ToString();
+                boldHeaderTitle = tableSwitch;
+
+                if (!fromNotification)
+                {
+                    
+                    randLawIndex = rand.Next(listData.Count());
+                    LawOrPrinciple = listData[randLawIndex].Law.ToString();
+                }
+                else
+                {
+                    
+                    randLawIndex = indexTable;
+                    LawOrPrinciple = (indexTable + 1).ToString();
+                }
+                
                 HeaderTitle = listData[randLawIndex].Title;
                 HeaderDescription = listData[randLawIndex].Description;
 

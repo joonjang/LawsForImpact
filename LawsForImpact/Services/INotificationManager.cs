@@ -12,9 +12,9 @@ namespace LawsForImpact.Services
 
         int ScheduleNotification(string title, string message);
 
-        void ReceiveNotification(string title, string message);
+        void ReceiveNotification(string tableKey, int indexKey);
         void RepeatAlarmSet();
-        void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, int index, bool randomTog, int repeatInterval);
+        void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, bool randomTog, int repeatInterval);
 
         void Cancel();
     }

@@ -37,8 +37,8 @@ namespace LawsForImpact.Droid
         private SQLiteConnection _sqLiteConnection;
         public const string LocalNotificationKey = "LocalNotification";
 
-        public const string TitleKey = "title";
-        public const string MessageKey = "message";
+        public const string TableKey = "table";
+        public const string IndexKey = "index";
 
         bool channelInitialized = false;
         int messageId = -1;
@@ -47,6 +47,7 @@ namespace LawsForImpact.Droid
         public event EventHandler NotificationReceived;
 
         string currentTitle;
+        int currentIndex;
         SavedInformation savedInfo;
 
         public void Initialize()
@@ -76,8 +77,8 @@ namespace LawsForImpact.Droid
             //var alarmManager = GetAlarmManager();
             //alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 3000, pendingIntentAndroid);
 
-            intentMain.PutExtra(TitleKey, title);
-            intentMain.PutExtra(MessageKey, message);
+            intentMain.PutExtra(TableKey, currentTitle);
+            intentMain.PutExtra(IndexKey, currentIndex);
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.Create(Application.Context);
             stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
@@ -128,9 +129,23 @@ namespace LawsForImpact.Droid
         }
 
 
-        
 
-        
+        public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, bool randomTog, int repeatInterval)
+        {
+            savedInfo = new SavedInformation();
+
+            currentTitle = pickedQueue.ElementAt(queueIndex).Key;
+
+            savedInfo.QueueOfSaved = pickedQueue;
+            savedInfo.QueueIndex = queueIndex;
+
+            savedInfo.RandomToggle = randomTog;
+            savedInfo.RepeatInterval = repeatInterval;
+
+            LoadData();
+            RepeatAlarmSet();
+        }
+
 
         public override void OnReceive(Context context, Intent intent)
         {
@@ -139,11 +154,11 @@ namespace LawsForImpact.Droid
 
             SerializableDictionary<string, int> queue = notification.QueueOfSaved;
             var queueIndex = notification.QueueIndex;
-            var index = notification.Index;
+
             var randTog = notification.RandomToggle;
             var repInterval = notification.RepeatInterval;
 
-            SavedInfo(queue, queueIndex, index, randTog, repInterval);
+            SavedInfo(queue, queueIndex, randTog, repInterval);
         }
 
         
@@ -174,20 +189,7 @@ namespace LawsForImpact.Droid
         
 
 
-        public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, int index, bool randomTog, int repeatInterval)
-        {
-            savedInfo = new SavedInformation();
-
-            currentTitle = pickedQueue.ElementAt(queueIndex).Key;
-            savedInfo.QueueOfSaved = pickedQueue;
-            savedInfo.QueueIndex = queueIndex;
-            savedInfo.Index = index;
-            savedInfo.RandomToggle = randomTog;
-            savedInfo.RepeatInterval = repeatInterval;
-
-            LoadData();
-            RepeatAlarmSet();
-        }
+        
 
         private async void LoadData()
         {
@@ -220,6 +222,7 @@ namespace LawsForImpact.Droid
 
             int index = listData.Count() - savedInfo.QueueOfSaved[currentTitle];
             index = index - 1;
+            currentIndex = index;
 
 
 
@@ -267,12 +270,12 @@ namespace LawsForImpact.Droid
 
 
 
-        public void ReceiveNotification(string title, string message)
+        public void ReceiveNotification(string table, int index)
         {
             var args = new NotificationEventArgs()
             {
-                Title = title,
-                Message = message,
+                Table = table,
+                Index = index,
             };
             NotificationReceived?.Invoke(null, args);
         }
