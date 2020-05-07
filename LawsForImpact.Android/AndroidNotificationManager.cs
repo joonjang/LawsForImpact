@@ -102,7 +102,7 @@ namespace LawsForImpact.Droid
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
 
             Notification notification = builder.Build();
-            manager.Notify(messageId, notification);
+            manager.Notify(0, notification);
 
 
             /////////0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -161,6 +161,16 @@ namespace LawsForImpact.Droid
             alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 30000, pendingIntent);
         }
 
+        public void Cancel()
+        {
+            var intent = new Intent(Application.Context, typeof(AndroidNotificationManager));
+            var pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
+            var alarmManager = GetAlarmManager();
+            pendingIntent.Cancel();
+            alarmManager.Cancel(pendingIntent);
+            var notificationManager = NotificationManagerCompat.From(Application.Context);
+            notificationManager.CancelAll();
+        }
         
 
 

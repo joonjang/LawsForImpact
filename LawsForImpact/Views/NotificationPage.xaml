@@ -16,9 +16,6 @@
 
 
             <StackLayout>
-
-                <Label Text="{Binding TestNotificationLabel}" d:Text="blank" FontSize="25" HorizontalOptions="Center" />
-
                 <StackLayout Orientation="Horizontal">
                 <Label Text="Personal Input" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
                 <CheckBox IsChecked="{Binding UserCheck}" HorizontalOptions="EndAndExpand"/>

@@ -27,7 +27,6 @@ namespace LawsForImpact.ViewModels
             ///////
             SaveCommand = new Command(() => SaveLocalNotification());
             CancelCommand = new Command(() => CancelNotification());
-            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
             //////
 
 
@@ -54,40 +53,9 @@ namespace LawsForImpact.ViewModels
         private void SaveLocalNotification()
         {
 
-            ///// delete //////////////////////////////////////////////////////////////////////////////
-            //notificationNumber++;
-            //string title = $"Local Notification #{notificationNumber}";
-            //string message = $"You have now received {notificationNumber} notifications!";
-
-            //// what triggers notification creation
-            //notificationManager.ScheduleNotification(title, message);
-            //// should set repeat
-
-            //ItemDetailPage tmp = new ItemDetailPage();
-            //tmp.viewModel.HeaderDescription = "dsadsads";
-            //// delete .............................................................
-
-
             notificationManager.SavedInfo(nQueue, 0, 0, false, 3000);
 
-            TestNotificationLabel = "notification has been clicked ";
         }
-
-        private string testNotificationLabel;
-        public string TestNotificationLabel
-        {
-            get { return testNotificationLabel; }
-            set
-            {
-                testNotificationLabel = value;
-                OnPropertyChanged(nameof(TestNotificationLabel));
-            }
-        }
-
-
-
-
-
 
 
 
@@ -101,10 +69,6 @@ namespace LawsForImpact.ViewModels
                 OnPropertyChanged(nameof(HeaderTitle));
             }
         }
-
-        /////////////////////////////////
-
-        public ICommand OpenWebCommand { get; }
 
         Command _saveCommand;
         public Command SaveCommand
@@ -134,7 +98,7 @@ namespace LawsForImpact.ViewModels
 
         void CancelNotification()
         {
-            //notificationManager.Cancel(0);
+            notificationManager.Cancel();
         }
 
         DateTime _selectedDate = DateTime.Today;
