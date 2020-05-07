@@ -54,21 +54,21 @@ namespace LawsForImpact.ViewModels
         private void SaveLocalNotification()
         {
 
-            /// delete //////////////////////////////////////////////////////////////////////////////
-            notificationNumber++;
-            string title = $"Local Notification #{notificationNumber}";
-            string message = $"You have now received {notificationNumber} notifications!";
+            ///// delete //////////////////////////////////////////////////////////////////////////////
+            //notificationNumber++;
+            //string title = $"Local Notification #{notificationNumber}";
+            //string message = $"You have now received {notificationNumber} notifications!";
 
-            // what triggers notification creation
-            notificationManager.ScheduleNotification(title, message);
-            // should set repeat
+            //// what triggers notification creation
+            //notificationManager.ScheduleNotification(title, message);
+            //// should set repeat
 
-            ItemDetailPage tmp = new ItemDetailPage();
-            tmp.viewModel.HeaderDescription = "dsadsads";
-            // delete .............................................................
+            //ItemDetailPage tmp = new ItemDetailPage();
+            //tmp.viewModel.HeaderDescription = "dsadsads";
+            //// delete .............................................................
 
 
-            //notificationManager.SavedInfo(nQueue, 0, 0, false, 3000);
+            notificationManager.SavedInfo(nQueue, 0, 0, false, 3000);
 
             TestNotificationLabel = "notification has been clicked ";
         }
