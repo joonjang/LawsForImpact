@@ -70,13 +70,6 @@ namespace LawsForImpact.Droid
             // 2 the alarm repeater
             Intent intentAndroid = new Intent(AndroidApp.Context, typeof(AndroidNotificationManager));
 
-            //var serializedNotification = SerializeNotification(savedInfo);
-            //intentAndroid.PutExtra(LocalNotificationKey, serializedNotification);
-
-            //var pendingIntentAndroid = PendingIntent.GetBroadcast(Application.Context, 0, intentAndroid, PendingIntentFlags.UpdateCurrent);
-            //var alarmManager = GetAlarmManager();
-            //alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 3000, pendingIntentAndroid);
-
             intentMain.PutExtra(TableKey, currentTitle);
             intentMain.PutExtra(IndexKey, currentIndex);
 
@@ -85,8 +78,8 @@ namespace LawsForImpact.Droid
             stackBuilder.AddNextIntent(intentMain);
             stackBuilder.AddNextIntent(intentAndroid);
 
+            NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
 
-            
 
             //var serializedNotification = SerializeNotification(savedInfo);
             //intentAndroid.PutExtra(LocalNotificationKey, serializedNotification);
@@ -99,30 +92,12 @@ namespace LawsForImpact.Droid
                 .SetContentTitle(title)
                 .SetContentText(message)
                 .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.ic_mtrl_chip_checked_circle))
-                .SetSmallIcon(Resource.Drawable.ic_mtrl_chip_close_circle)
-                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
+                .SetSmallIcon(Resource.Drawable.ic_mtrl_chip_checked_black)
+                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
+                .SetStyle(textStyle);
 
             Notification notification = builder.Build();
             manager.Notify(0, notification);
-
-
-            /////////0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-            //var resultIntent = GetLauncherActivity();
-            //resultIntent.SetFlags(ActivityFlags.NewTask | ActivityFlags.ClearTask);
-            //var stackBuilder = Android.Support.V4.App.TaskStackBuilder.Create(Application.Context);
-            //stackBuilder.AddNextIntent(resultIntent);
-
-            //var resultPendingIntent =
-            //    stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.Immutable);
-            //builder.SetContentIntent(resultPendingIntent);
-
-            //// Sending notification    
-            //var notificationManager = NotificationManagerCompat.From(Application.Context);
-            //notificationManager.Notify(messageId, builder.Build());
-
-            //Xamarin.Forms.DependencyService.Get<INotificationManager>().SavedInfo(new SerializableDictionary<string, int>() { { "Power", 0 } }, 0, 0, false, 3000);
-            ////////--------------------------------------------------------------------------------------------------------------------------------------------------------------
-            ///
 
 
             return messageId;
