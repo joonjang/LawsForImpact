@@ -68,27 +68,26 @@ namespace LawsForImpact.Droid
             // 1 MainActivity intent allows MainActivity to change once notification tapped
             Intent intentMain = new Intent(AndroidApp.Context, typeof(MainActivity));
             // 2 the alarm repeater
-            Intent intentAndroid = new Intent(AndroidApp.Context, typeof(AndroidNotificationManager));
+            //Intent intentAndroid = new Intent(AndroidApp.Context, typeof(AndroidNotificationManager));
 
             intentMain.PutExtra(TableKey, currentTitle);
             intentMain.PutExtra(IndexKey, currentIndex);
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.Create(Application.Context);
-            stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
-            stackBuilder.AddNextIntent(intentMain);
-            stackBuilder.AddNextIntent(intentAndroid);
-
-            NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
-
-
             //var serializedNotification = SerializeNotification(savedInfo);
             //intentAndroid.PutExtra(LocalNotificationKey, serializedNotification);
 
-            //PendingIntent pendingIntentMain = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intentMain, PendingIntentFlags.UpdateCurrent);
-            PendingIntent pendingIntent = stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.UpdateCurrent);
 
+            //TaskStackBuilder stackBuilder = TaskStackBuilder.Create(Application.Context);
+            //stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
+            //stackBuilder.AddNextIntent(intentMain);
+            //stackBuilder.AddNextIntent(intentAndroid);
+
+
+            PendingIntent pendingIntentMain = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intentMain, PendingIntentFlags.UpdateCurrent);
+            //PendingIntent pendingIntent = stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.UpdateCurrent);
+            NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
-                .SetContentIntent(pendingIntent)
+                .SetContentIntent(pendingIntentMain)
                 .SetContentTitle(title)
                 .SetContentText(message)
                 .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.ic_mtrl_chip_checked_circle))
@@ -99,6 +98,10 @@ namespace LawsForImpact.Droid
             Notification notification = builder.Build();
             manager.Notify(0, notification);
 
+
+            //PendingIntent.GetBroadcast(Application.Context, 0, intentAndroid, PendingIntentFlags.UpdateCurrent);
+            //var alarmManager = GetAlarmManager();
+            //alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 30000, pendingIntent);
 
             return messageId;
         }
@@ -153,11 +156,14 @@ namespace LawsForImpact.Droid
 
         public void Cancel()
         {
+
+
             var intent = new Intent(Application.Context, typeof(AndroidNotificationManager));
             var pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
             var alarmManager = GetAlarmManager();
             pendingIntent.Cancel();
             alarmManager.Cancel(pendingIntent);
+
             var notificationManager = NotificationManagerCompat.From(Application.Context);
             notificationManager.CancelAll();
         }
@@ -253,6 +259,9 @@ namespace LawsForImpact.Droid
                 Index = index,
             };
             NotificationReceived?.Invoke(null, args);
+
+            var notificationManager = NotificationManagerCompat.From(Application.Context);
+            notificationManager.CancelAll();
         }
 
         public static Intent GetLauncherActivity()

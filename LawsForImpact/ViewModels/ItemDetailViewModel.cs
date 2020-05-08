@@ -35,7 +35,7 @@ namespace LawsForImpact.ViewModels
                 tableSwitch = table;
                 indexTable = index;
                 fromNotification = true;
-                LoadData();
+                LoadData(fromNotification);
                 
             });
         }
@@ -105,7 +105,7 @@ namespace LawsForImpact.ViewModels
         //  = Global.notifCurrentTitle
         string boldHeaderTitle;
 
-        public async void LoadData()
+        public async void LoadData(bool fromNotification)
         {
 
             try

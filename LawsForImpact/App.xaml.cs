@@ -37,6 +37,8 @@ namespace LawsForImpact
 
         protected override void OnSleep()
         {
+
+            // this might be the key to continuing notification
         }
 
         protected override void OnResume()

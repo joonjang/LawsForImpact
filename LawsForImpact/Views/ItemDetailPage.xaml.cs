@@ -31,7 +31,7 @@ namespace LawsForImpact.Views
             };
             if (viewModel.HeaderTitle == null)
             {
-                viewModel.LoadData();
+                viewModel.LoadData(false);
             }
             
 
@@ -41,7 +41,7 @@ namespace LawsForImpact.Views
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            viewModel.LoadData();
+            viewModel.LoadData(false);
         }
     }
 }
