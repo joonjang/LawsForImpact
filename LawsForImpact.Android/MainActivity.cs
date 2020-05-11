@@ -38,14 +38,6 @@ namespace LawsForImpact.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
 
-
-            //Intent intent = Intent;
-            //if (intent?.Extras != null)
-            //{
-            //    Global.selectedDescription = "ON";
-            //}
-
-
             LoadApplication(new App());
        
             CreateNotificationFromIntent(Intent);

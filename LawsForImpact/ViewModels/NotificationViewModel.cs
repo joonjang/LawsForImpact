@@ -19,7 +19,7 @@ namespace LawsForImpact.ViewModels
     {
         SerializableDictionary<string, int> nQueue = new SerializableDictionary<string, int>();
         INotificationManager notificationManager;
-        int notificationNumber = 0;
+        long intervalChosen;
 
         public NotificationViewModel()
         {
@@ -42,14 +42,14 @@ namespace LawsForImpact.ViewModels
             randomOff = Preferences.Get("RandomOff", true);
             randomOn = Preferences.Get("RandomOn", false);
 
+            everydayToggle = Preferences.Get("Everyday", false);
+            otherDayToggle = Preferences.Get("Otherday", false);
+            weeklyToggle = Preferences.Get("Weekly", false);
+            monthlyToggle = Preferences.Get("Monthly", false);
+
 
 
             notificationManager = DependencyService.Get<INotificationManager>();
-
-            //if (Global.selectedDescription == "ON")
-            //{
-            //    SaveLocalNotification();
-            //}
 
         }
 
@@ -58,8 +58,7 @@ namespace LawsForImpact.ViewModels
         private void SaveLocalNotification()
         {
 
-            notificationManager.SavedInfo(nQueue, 0, false, 3000);
-            notificationManager.RepeatAlarmSet();
+            notificationManager.SavedInfo(nQueue, 0, false, intervalChosen);
 
         }
 
@@ -102,8 +101,22 @@ namespace LawsForImpact.ViewModels
             }
         }
 
+
+
         void CancelNotification()
         {
+            UserCheck = false;
+            PowerCheck = false;
+            WarCheck = false;
+            MasteryCheck = false;
+            FriendsCheck = false;
+            HumanCheck = false;
+
+            EverydayToggle = false;
+            OtherDayToggle = false;
+            WeeklyToggle = false;
+            MonthlyToggle = false;
+
             notificationManager.Cancel();
         }
 
@@ -132,30 +145,6 @@ namespace LawsForImpact.ViewModels
             }
         }
 
-
-        
-
-        // todo go over why this works
-        private bool everydayToggle;
-        public bool EverydayToggle
-        {
-            get => everydayToggle;
-            set
-            {
-
-                SetProperty(ref everydayToggle, value, nameof(EverydayToggle));
-                
-                if (value)
-                {
-                    OtherDayToggle = false;
-                    WeeklyToggle = false;
-                    MonthlyToggle = false;
-
-                }
-            }
-        }
-
-        // todo find out how this value parameter works
         private bool showDate;
         public bool ShowDate
         {
@@ -166,6 +155,47 @@ namespace LawsForImpact.ViewModels
             }
         }
 
+        private bool showSave;
+        public bool ShowSave
+        {
+            get => showSave;
+            set
+            {
+                SetProperty(ref showSave, value, nameof(ShowSave));
+            }
+        }
+
+
+        private bool everydayToggle;
+        public bool EverydayToggle
+        {
+            get => everydayToggle;
+            set
+            {
+
+                SetProperty(ref everydayToggle, value, nameof(EverydayToggle));
+                Preferences.Set("Everyday", value);
+
+                if (value)
+                {
+                    OtherDayToggle = false;
+                    WeeklyToggle = false;
+                    MonthlyToggle = false;
+                    ShowSave = true;
+
+                    // for debugging
+                    intervalChosen = 2000;
+                    //intervalChosen = 1000 * 60 * 60 * 24;
+                }
+                else
+                {
+                    ShowSave = false;
+                }
+            }
+        }
+
+       
+
         private bool otherDayToggle;
         public bool OtherDayToggle
         {
@@ -173,6 +203,7 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref otherDayToggle, value, nameof(OtherDayToggle));
+                Preferences.Set("Otherday", value);
 
                 if (value)
                 {
@@ -180,11 +211,14 @@ namespace LawsForImpact.ViewModels
                     WeeklyToggle = false;
                     MonthlyToggle = false;
                     ShowDate = true;
+                    ShowSave = true;
 
+                    intervalChosen = 1000 * 60 * 60 * 24*3;
                 }
                 else
                 {
                     ShowDate = false;
+                    ShowSave = false;
                 }
             }
         }
@@ -197,17 +231,20 @@ namespace LawsForImpact.ViewModels
             {
 
                 SetProperty(ref weeklyToggle, value, nameof(WeeklyToggle));
+                Preferences.Set("Weekly", value);
                 if (value)
                 {
                     EverydayToggle = false;
                     OtherDayToggle = false;
                     MonthlyToggle = false;
                     ShowDate = true;
-
+                    ShowSave = true;
+                    intervalChosen = 1000 * 60 * 60 * 24*7;
                 }
                 else
                 {
                     ShowDate = false;
+                    ShowSave = false;
                 }
             }
         }
@@ -220,17 +257,20 @@ namespace LawsForImpact.ViewModels
             {
 
                 SetProperty(ref monthlyToggle, value, nameof(MonthlyToggle));
+                Preferences.Set("Monthly", value);
                 if (value)
                 {
                     EverydayToggle = false;
                     OtherDayToggle = false;
                     WeeklyToggle = false;
                     ShowDate = true;
-
+                    ShowSave = true;
+                    intervalChosen = 2419200000;
                 }
                 else
                 {
                     ShowDate = false;
+                    ShowSave = false;
                 }
             }
         }

@@ -10,6 +10,6 @@ namespace LawsForImpact.Models
         public int QueueIndex { get; set; }
         public int Index { get; set; }
         public bool RandomToggle { get; set; }
-        public int RepeatInterval { get; set; }
+        public long RepeatInterval { get; set; }
     }
 }

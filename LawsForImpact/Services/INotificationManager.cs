@@ -14,7 +14,7 @@ namespace LawsForImpact.Services
 
         void ReceiveNotification(string tableKey, int indexKey);
         void RepeatAlarmSet();
-        void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, bool randomTog, int repeatInterval);
+        void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, bool randomTog, long repeatInterval);
 
         void Cancel();
     }

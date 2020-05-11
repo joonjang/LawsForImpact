@@ -25,6 +25,7 @@ using System.Xml.Serialization;
 using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
 using Android.Util;
 using System.Threading.Tasks;
+using Android.Icu.Util;
 
 [assembly: Dependency(typeof(LawsForImpact.Droid.AndroidNotificationManager))]
 
@@ -75,24 +76,12 @@ namespace LawsForImpact.Droid
 
             // 1 MainActivity intent allows MainActivity to change once notification tapped
             Intent intentMain = new Intent(AndroidApp.Context, typeof(MainActivity));
-            // 2 the alarm repeater
-            //Intent intentAndroid = new Intent(AndroidApp.Context, typeof(AndroidNotificationManager));
 
             intentMain.PutExtra(TableKey, currentTitle);
             intentMain.PutExtra(IndexKey, currentIndex);
 
-            //var serializedNotification = SerializeNotification(savedInfo);
-            //intentAndroid.PutExtra(LocalNotificationKey, serializedNotification);
-
-
-            //TaskStackBuilder stackBuilder = TaskStackBuilder.Create(Application.Context);
-            //stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
-            //stackBuilder.AddNextIntent(intentMain);
-            //stackBuilder.AddNextIntent(intentAndroid);
-
 
             PendingIntent pendingIntentMain = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intentMain, PendingIntentFlags.UpdateCurrent);
-            //PendingIntent pendingIntent = stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.UpdateCurrent);
             NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
                 .SetContentIntent(pendingIntentMain)
@@ -104,22 +93,18 @@ namespace LawsForImpact.Droid
                 .SetStyle(textStyle);
 
             Random random = new Random();
-            int randomNumber = random.Next(9999 - 1000) + 1000;
+            int randomNumber = random.Next(9999);
 
             Notification notification = builder.Build();
             manager.Notify(randomNumber, notification);
 
-
-            //PendingIntent.GetBroadcast(Application.Context, 0, intentAndroid, PendingIntentFlags.UpdateCurrent);
-            //var alarmManager = GetAlarmManager();
-            //alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 30000, pendingIntent);
 
             return messageId;
         }
 
 
 
-        public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, bool randomTog, int repeatInterval)
+        public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, bool randomTog, long repeatInterval)
         {
             Log.Info("myapp", "saved info enterred");
             savedInfo = new SavedInformation();
@@ -133,8 +118,8 @@ namespace LawsForImpact.Droid
             savedInfo.RepeatInterval = repeatInterval;
             
             LoadData();
+            RepeatAlarmSet();
 
-            
             Log.Info("myapp", "saved info EXIT");
         }
 
@@ -153,14 +138,15 @@ namespace LawsForImpact.Droid
             var repInterval = notification.RepeatInterval;
 
             SavedInfo(queue, queueIndex, randTog, repInterval);
-            RepeatAlarmSet();
+            
             Log.Info("myapp", "on receive EXIT");
         }
 
-        
 
         public void RepeatAlarmSet()
         {
+            var time = Calendar.GetInstance(Android.Icu.Util.TimeZone.Default).TimeInMillis;
+
             Log.Info("myapp", "repeat alarm enterred");
 
             Intent intent = new Intent(Application.Context, typeof(AndroidNotificationManager));
@@ -171,7 +157,7 @@ namespace LawsForImpact.Droid
 
             var pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
             var alarmManager = GetAlarmManager();
-            alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 1000, pendingIntent);
+            alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, time + savedInfo.RepeatInterval, pendingIntent);
             Log.Info("myapp", "repeat alarm EXIT");
         }
 
@@ -189,24 +175,11 @@ namespace LawsForImpact.Droid
             notificationManager.CancelAll();
         }
 
-
-
-
-
-        private async void LoadData()
+        private void LoadData()
         {
             try
             {
                 Log.Info("myapp", "load data enterred");
-
-
-                //SQLiteConnection _sqLiteConnection;
-                //_sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-
-                //AndroidSQLite tmp = new AndroidSQLite();
-
-
-
 
                 string dbPath = System.IO.Path.Combine(
                  System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "LawOfPower.db");
@@ -245,7 +218,6 @@ namespace LawsForImpact.Droid
                 currentIndex = index;
 
 
-
                 // if random enabled
                 if (savedInfo.RandomToggle)
                 {
@@ -281,8 +253,6 @@ namespace LawsForImpact.Droid
                     savedInfo.QueueIndex = 0;
                 }
 
-                //string title = "debug";
-                //string message = "test";
 
                 ScheduleNotification(title, message);
                 Log.Info("myapp", "load data EXIT");
@@ -292,10 +262,6 @@ namespace LawsForImpact.Droid
                 Log.Info("myapp", "load data ERROR" + e);
             }
         }
-
-
-
-
 
 
 

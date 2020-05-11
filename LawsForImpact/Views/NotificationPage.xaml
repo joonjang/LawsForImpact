@@ -86,9 +86,9 @@
                 </StackLayout>
 
             <Grid Grid.Row="2">
-                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal" IsVisible="{Binding ShowSave}">
                     <Label Text="SET TIME" HorizontalOptions="StartAndExpand" FontSize="15" TextColor="Black" VerticalOptions="Center"/>
-                    <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SelectedTime}" TextColor="Black" BackgroundColor="Transparent" Format="t"/>
+                    <TimePicker HorizontalOptions="EndAndExpand" Time="{Binding SelectedTime}"  TextColor="Black" BackgroundColor="Transparent" Format="t"/>
                 </StackLayout>
             </Grid>
             <Grid Grid.Row="3">
@@ -98,10 +98,10 @@
                 </StackLayout>
             </Grid>
             <Grid Grid.Row="4">
-                <Button Text="Save" Command="{Binding SaveCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
+                <Button Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding ShowSave}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
             </Grid>
                 <Grid Grid.Row="5">
-                    <Button Text="Cancel" Command="{Binding CancelCommand}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
+                    <Button Text="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding ShowSave}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
                 </Grid>
             </StackLayout>
 
