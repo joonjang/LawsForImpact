@@ -46,6 +46,11 @@ namespace LawsForImpact.ViewModels
 
             notificationManager = DependencyService.Get<INotificationManager>();
 
+            //if (Global.selectedDescription == "ON")
+            //{
+            //    SaveLocalNotification();
+            //}
+
         }
 
 
@@ -54,6 +59,7 @@ namespace LawsForImpact.ViewModels
         {
 
             notificationManager.SavedInfo(nQueue, 0, false, 3000);
+            notificationManager.RepeatAlarmSet();
 
         }
 

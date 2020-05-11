@@ -11,7 +11,8 @@ using LawsForImpact.Services;
 using Xamarin.Forms;
 using LawsForImpact.Views;
 using Android;
-
+using Xamarin.Essentials;
+using LawsForImpact.Models;
 
 namespace LawsForImpact.Droid
 {
@@ -25,7 +26,7 @@ namespace LawsForImpact.Droid
 
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -33,13 +34,22 @@ namespace LawsForImpact.Droid
 
             base.OnCreate(savedInstanceState);
 
+
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
-            LoadApplication(new App());
 
+
+            //Intent intent = Intent;
+            //if (intent?.Extras != null)
+            //{
+            //    Global.selectedDescription = "ON";
+            //}
+
+
+            LoadApplication(new App());
+       
             CreateNotificationFromIntent(Intent);
 
-            
         }
 
         protected override void OnNewIntent(Intent intent)

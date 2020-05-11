@@ -23,8 +23,11 @@ using SQLite;
 using System.IO;
 using System.Xml.Serialization;
 using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
+using Android.Util;
+using System.Threading.Tasks;
 
 [assembly: Dependency(typeof(LawsForImpact.Droid.AndroidNotificationManager))]
+
 namespace LawsForImpact.Droid
 {
     [BroadcastReceiver]
@@ -34,7 +37,7 @@ namespace LawsForImpact.Droid
         const string channelName = "Default";
         const string channelDescription = "The default channel for notifications.";
         const int pendingIntentId = 0;
-        private SQLiteConnection _sqLiteConnection;
+        
         public const string LocalNotificationKey = "LocalNotification";
 
         public const string TableKey = "table";
@@ -50,9 +53,14 @@ namespace LawsForImpact.Droid
         int currentIndex;
         SavedInformation savedInfo;
 
+
+
         public void Initialize()
         {
+
             CreateNotificationChannel();
+
+
         }
 
         public int ScheduleNotification(string title, string message)
@@ -95,8 +103,11 @@ namespace LawsForImpact.Droid
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
                 .SetStyle(textStyle);
 
+            Random random = new Random();
+            int randomNumber = random.Next(9999 - 1000) + 1000;
+
             Notification notification = builder.Build();
-            manager.Notify(0, notification);
+            manager.Notify(randomNumber, notification);
 
 
             //PendingIntent.GetBroadcast(Application.Context, 0, intentAndroid, PendingIntentFlags.UpdateCurrent);
@@ -110,6 +121,7 @@ namespace LawsForImpact.Droid
 
         public void SavedInfo(SerializableDictionary<string, int> pickedQueue, int queueIndex, bool randomTog, int repeatInterval)
         {
+            Log.Info("myapp", "saved info enterred");
             savedInfo = new SavedInformation();
 
             currentTitle = pickedQueue.ElementAt(queueIndex).Key;
@@ -119,14 +131,18 @@ namespace LawsForImpact.Droid
 
             savedInfo.RandomToggle = randomTog;
             savedInfo.RepeatInterval = repeatInterval;
-
+            
             LoadData();
-            RepeatAlarmSet();
+
+            
+            Log.Info("myapp", "saved info EXIT");
         }
 
 
         public override void OnReceive(Context context, Intent intent)
         {
+            Log.Info("myapp", "on receive enterred");
+
             var extra = intent.GetStringExtra(LocalNotificationKey);
             var notification = DeserializeNotification(extra);
 
@@ -137,12 +153,16 @@ namespace LawsForImpact.Droid
             var repInterval = notification.RepeatInterval;
 
             SavedInfo(queue, queueIndex, randTog, repInterval);
+            RepeatAlarmSet();
+            Log.Info("myapp", "on receive EXIT");
         }
 
         
 
         public void RepeatAlarmSet()
         {
+            Log.Info("myapp", "repeat alarm enterred");
+
             Intent intent = new Intent(Application.Context, typeof(AndroidNotificationManager));
             var serializedNotification = SerializeNotification(savedInfo);
             intent.PutExtra(LocalNotificationKey, serializedNotification);
@@ -151,7 +171,8 @@ namespace LawsForImpact.Droid
 
             var pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
             var alarmManager = GetAlarmManager();
-            alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 30000, pendingIntent);
+            alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, 1000, pendingIntent);
+            Log.Info("myapp", "repeat alarm EXIT");
         }
 
         public void Cancel()
@@ -167,82 +188,109 @@ namespace LawsForImpact.Droid
             var notificationManager = NotificationManagerCompat.From(Application.Context);
             notificationManager.CancelAll();
         }
-        
 
 
-        
+
+
 
         private async void LoadData()
         {
-            _sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
-            IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
-            List<IDataTable> listData;
-
-            switch (currentTitle)
+            try
             {
-                case "Power":
-                    tableToEnumerable = _sqLiteConnection.Table<Power>().ToList();
-                    break;
-                case "Mastery":
-                    tableToEnumerable = _sqLiteConnection.Table<Mastery>().ToList();
-                    break;
-                case "User":
-                    tableToEnumerable = _sqLiteConnection.Table<User>().ToList();
-                    break;
-                case "War":
-                    tableToEnumerable = _sqLiteConnection.Table<War>().ToList();
-                    break;
-                case "Friends":
-                    tableToEnumerable = _sqLiteConnection.Table<Friends>().ToList();
-                    break;
-                case "Human":
-                    tableToEnumerable = _sqLiteConnection.Table<Human>().ToList();
-                    break;
+                Log.Info("myapp", "load data enterred");
+
+
+                //SQLiteConnection _sqLiteConnection;
+                //_sqLiteConnection = await Xamarin.Forms.DependencyService.Get<ISQLite>().GetConnection();
+
+                //AndroidSQLite tmp = new AndroidSQLite();
+
+
+
+
+                string dbPath = System.IO.Path.Combine(
+                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "LawOfPower.db");
+                var _sqLiteConnection = new SQLiteConnection(dbPath);
+
+
+
+                IEnumerable<IDataTable> tableToEnumerable = new List<IDataTable>();
+                List<IDataTable> listData;
+
+                switch (currentTitle)
+                {
+                    case "Power":
+                        tableToEnumerable = _sqLiteConnection.Table<Power>().ToList();
+                        break;
+                    case "Mastery":
+                        tableToEnumerable = _sqLiteConnection.Table<Mastery>().ToList();
+                        break;
+                    case "User":
+                        tableToEnumerable = _sqLiteConnection.Table<User>().ToList();
+                        break;
+                    case "War":
+                        tableToEnumerable = _sqLiteConnection.Table<War>().ToList();
+                        break;
+                    case "Friends":
+                        tableToEnumerable = _sqLiteConnection.Table<Friends>().ToList();
+                        break;
+                    case "Human":
+                        tableToEnumerable = _sqLiteConnection.Table<Human>().ToList();
+                        break;
+                }
+                listData = tableToEnumerable.ToList();
+
+                int index = listData.Count() - savedInfo.QueueOfSaved[currentTitle];
+                index = index - 1;
+                currentIndex = index;
+
+
+
+                // if random enabled
+                if (savedInfo.RandomToggle)
+                {
+                    Random random = new Random();
+                    index = random.Next(0, listData.Count());
+                }
+
+
+                //sets all the current notification information
+                string title = listData[index].Title;
+                string message = listData[index].Description;
+
+                //logic for next notification
+
+
+                // subtract the queue int of current notification subject to keep track of next index
+                savedInfo.QueueOfSaved[currentTitle] = savedInfo.QueueOfSaved[currentTitle] - 1;
+
+                // check for index overflow
+                if (savedInfo.QueueOfSaved[currentTitle] < 0)
+                {
+                    savedInfo.QueueOfSaved[currentTitle] = listData.Count() - 1;
+                }
+
+
+                // index of next table
+                savedInfo.QueueIndex = savedInfo.QueueIndex + 1;
+
+
+                // if next table index overflows that means its time to restart the table index and move up the notification index
+                if (savedInfo.QueueIndex >= savedInfo.QueueOfSaved.Count)
+                {
+                    savedInfo.QueueIndex = 0;
+                }
+
+                //string title = "debug";
+                //string message = "test";
+
+                ScheduleNotification(title, message);
+                Log.Info("myapp", "load data EXIT");
             }
-            listData = tableToEnumerable.ToList();
-
-            int index = listData.Count() - savedInfo.QueueOfSaved[currentTitle];
-            index = index - 1;
-            currentIndex = index;
-
-
-
-            // if random enabled
-            if (savedInfo.RandomToggle)
+            catch (System.Exception e)
             {
-                Random random = new Random();
-                index = random.Next(0, listData.Count());
+                Log.Info("myapp", "load data ERROR" + e);
             }
-
-
-            //sets all the current notification information
-            string title = listData[index].Title;
-            string message = listData[index].Description;
-
-            //logic for next notification
-
-
-            // subtract the queue int of current notification subject to keep track of next index
-            savedInfo.QueueOfSaved[currentTitle] = savedInfo.QueueOfSaved[currentTitle] - 1;
-
-            // check for index overflow
-            if (savedInfo.QueueOfSaved[currentTitle] < 0)
-            {
-                savedInfo.QueueOfSaved[currentTitle] = listData.Count() - 1;
-            }
-
-
-            // index of next table
-            savedInfo.QueueIndex = savedInfo.QueueIndex + 1;
-
-
-            // if next table index overflows that means its time to restart the table index and move up the notification index
-            if (savedInfo.QueueIndex >= savedInfo.QueueOfSaved.Count)
-            {
-                savedInfo.QueueIndex = 0;
-            }
-
-            ScheduleNotification(title, message);
         }
 
 

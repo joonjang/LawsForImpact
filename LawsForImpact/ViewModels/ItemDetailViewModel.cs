@@ -26,6 +26,8 @@ namespace LawsForImpact.ViewModels
                 var evtData = (NotificationEventArgs)eventArgs;
                 ShowNotification(evtData.Table, evtData.Index);
             };
+
+
         }
 
         void ShowNotification(string table, int index)

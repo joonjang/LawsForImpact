@@ -4,6 +4,7 @@ using Xamarin.Forms.Xaml;
 using LawsForImpact.Services;
 using LawsForImpact.Views;
 using LawsForImpact.Models;
+using SQLite;
 
 namespace LawsForImpact
 {
@@ -35,10 +36,9 @@ namespace LawsForImpact
         {
         }
 
-        protected override void OnSleep()
+        protected async override void OnSleep()
         {
-
-            // this might be the key to continuing notification
+            
         }
 
         protected override void OnResume()
