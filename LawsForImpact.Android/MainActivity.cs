@@ -18,7 +18,7 @@ namespace LawsForImpact.Droid
 {
     [Activity(
         LaunchMode = LaunchMode.SingleTop, 
-        Label = "LawsForImpact",
+        Label = "Influence",
         Icon = "@mipmap/icon", 
         Theme = "@style/MainTheme", 
         MainLauncher = true,
