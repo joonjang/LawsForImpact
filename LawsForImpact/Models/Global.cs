@@ -18,6 +18,9 @@ namespace LawsForImpact.Models
         public static string notifFullDescrip;
         public static SerializableDictionary<string, int> notifQueue = new SerializableDictionary<string, int>();
 
+        public static long selectedDate;
+        public static long selectedTime;
+
 
 
     }

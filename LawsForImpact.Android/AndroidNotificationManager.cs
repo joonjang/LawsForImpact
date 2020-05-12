@@ -145,7 +145,9 @@ namespace LawsForImpact.Droid
 
         public void RepeatAlarmSet()
         {
-            var time = Calendar.GetInstance(Android.Icu.Util.TimeZone.Default).TimeInMillis;
+            long time;
+
+            time = Global.selectedTime + Global.selectedDate;
 
             Log.Info("myapp", "repeat alarm enterred");
 
@@ -223,6 +225,7 @@ namespace LawsForImpact.Droid
                 {
                     Random random = new Random();
                     index = random.Next(0, listData.Count());
+                    currentIndex = index;
                 }
 
 

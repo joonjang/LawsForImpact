@@ -57,12 +57,66 @@ namespace LawsForImpact.ViewModels
 
         private void SaveLocalNotification()
         {
+            var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
+            var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
+            var dateTime = date + " " + time;
+            var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
-            notificationManager.SavedInfo(nQueue, 0, false, intervalChosen);
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            long ms = (long)(selectedDateTime.ToUniversalTime() - epoch).TotalMilliseconds;
+
+            Global.selectedDate = ms;
+
+            notificationManager.SavedInfo(nQueue, 0, RandomOn, intervalChosen);
 
         }
 
 
+        void CancelNotification()
+        {
+            UserCheck = false;
+            PowerCheck = false;
+            WarCheck = false;
+            MasteryCheck = false;
+            FriendsCheck = false;
+            HumanCheck = false;
+
+            EverydayToggle = false;
+            OtherDayToggle = false;
+            WeeklyToggle = false;
+            MonthlyToggle = false;
+
+            notificationManager.Cancel();
+        }
+
+        DateTime _selectedDate = DateTime.Today;
+        public DateTime SelectedDate
+        {
+            get
+            {
+                return _selectedDate;
+            }
+            set
+            {
+                SetProperty(ref _selectedDate, value);
+                // https://stackoverflow.com/questions/57839681/how-to-set-alarm-using-datetime-object-for-specific-date-and-time-in-xamarin-and
+                //DateTimeOffset dateOffsetValue = DateTimeOffset.Parse(_selectedDate.ToString());
+                //Global.selectedDate = dateOffsetValue.ToUnixTimeMilliseconds();
+            }
+        }
+        TimeSpan _selectedTime = DateTime.Now.TimeOfDay;
+        public TimeSpan SelectedTime
+        {
+            get
+            {
+                return _selectedTime;
+            }
+            set
+            {
+                SetProperty(ref _selectedTime, value);
+                Global.selectedTime = (long)_selectedTime.TotalMilliseconds - (long)DateTime.Now.TimeOfDay.TotalMilliseconds;
+            }
+        }
 
         private string headerTitle;
         public string HeaderTitle
@@ -98,50 +152,6 @@ namespace LawsForImpact.ViewModels
             set
             {
                 SetProperty(ref _cancelCommand, value);
-            }
-        }
-
-
-
-        void CancelNotification()
-        {
-            UserCheck = false;
-            PowerCheck = false;
-            WarCheck = false;
-            MasteryCheck = false;
-            FriendsCheck = false;
-            HumanCheck = false;
-
-            EverydayToggle = false;
-            OtherDayToggle = false;
-            WeeklyToggle = false;
-            MonthlyToggle = false;
-
-            notificationManager.Cancel();
-        }
-
-        DateTime _selectedDate = DateTime.Today;
-        public DateTime SelectedDate
-        {
-            get
-            {
-                return _selectedDate;
-            }
-            set
-            {
-                SetProperty(ref _selectedDate, value);
-            }
-        }
-        TimeSpan _selectedTime = DateTime.Now.TimeOfDay;
-        public TimeSpan SelectedTime
-        {
-            get
-            {
-                return _selectedTime;
-            }
-            set
-            {
-                SetProperty(ref _selectedTime, value);
             }
         }
 
