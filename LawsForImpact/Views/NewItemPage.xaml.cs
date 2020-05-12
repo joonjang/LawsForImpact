@@ -18,7 +18,7 @@ namespace LawsForImpact.Views
         public NewItemPage()
         {
             InitializeComponent();
-
+            
             Item = new Item
             {
                 Text = "Insert item header",

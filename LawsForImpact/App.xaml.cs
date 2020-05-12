@@ -36,7 +36,7 @@ namespace LawsForImpact
         {
         }
 
-        protected async override void OnSleep()
+        protected override void OnSleep()
         {
             
         }

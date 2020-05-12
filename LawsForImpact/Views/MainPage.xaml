@@ -7,8 +7,9 @@
             xmlns:views="clr-namespace:LawsForImpact.Views"
             x:Class="LawsForImpact.Views.MainPage">
 
+    
     <TabbedPage.Children>
-        <NavigationPage Title="Today">
+        <NavigationPage Title="Today" BarBackgroundColor="DarkRed">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_feed.png"/>
@@ -18,8 +19,8 @@
                 <views:ItemDetailPage />
             </x:Arguments>
         </NavigationPage>
-        
-        <NavigationPage Title="Browse">
+
+        <NavigationPage Title="Browse" BarBackgroundColor="DarkRed">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_feed.png"/>
@@ -29,8 +30,8 @@
                 <views:ItemsPage />
             </x:Arguments>
         </NavigationPage>
-        
-        <NavigationPage Title="Notifcation">  <!--About-->
+
+        <NavigationPage Title="Notifcation" BarBackgroundColor="DarkRed">  <!--About-->
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_about.png"/>
