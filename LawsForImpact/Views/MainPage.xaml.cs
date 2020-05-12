@@ -16,7 +16,7 @@ namespace LawsForImpact.Views
         
         public MainPage()
         {
-
+            
             InitializeComponent();
 
         }

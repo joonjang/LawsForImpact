@@ -57,19 +57,27 @@ namespace LawsForImpact.ViewModels
 
         private void SaveLocalNotification()
         {
-            var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
-            var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
-            var dateTime = date + " " + time;
-            var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
+            try
+            {
+                var date = (SelectedDate.Date.Month.ToString("00") + "-" + SelectedDate.Date.Day.ToString("00") + "-" + SelectedDate.Date.Year.ToString());
+                var time = Convert.ToDateTime(SelectedTime.ToString()).ToString("HH:mm");
+                var dateTime = date + " " + time;
+                var selectedDateTime = DateTime.ParseExact(dateTime, "MM-dd-yyyy HH:mm", CultureInfo.InvariantCulture);
 
-            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            long ms = (long)(selectedDateTime.ToUniversalTime() - epoch).TotalMilliseconds;
+                DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                long ms = (long)(selectedDateTime.ToUniversalTime() - epoch).TotalMilliseconds;
 
-            Global.selectedDate = ms;
+                Global.selectedDate = ms;
 
-            notificationManager.SavedInfo(nQueue, 0, RandomOn, intervalChosen);
+                notificationManager.SavedInfo(nQueue, 0, RandomOn, intervalChosen);
+            }
+            catch(Exception e)
+            {
 
-        }
+            }
+
+        } 
+    
 
 
         void CancelNotification()
@@ -194,8 +202,8 @@ namespace LawsForImpact.ViewModels
                     ShowSave = true;
 
                     // for debugging
-                    intervalChosen = 2000;
-                    //intervalChosen = 1000 * 60 * 60 * 24;
+                    //intervalChosen = 2000;
+                    intervalChosen = 1000 * 60 * 60 * 24;
                 }
                 else
                 {
