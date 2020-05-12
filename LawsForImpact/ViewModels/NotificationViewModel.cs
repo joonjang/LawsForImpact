@@ -68,8 +68,10 @@ namespace LawsForImpact.ViewModels
                 long ms = (long)(selectedDateTime.ToUniversalTime() - epoch).TotalMilliseconds;
 
                 Global.selectedDate = ms;
+                
 
                 notificationManager.SavedInfo(nQueue, 0, RandomOn, intervalChosen);
+                notificationManager.RepeatAlarmSet(true);
             }
             catch(Exception e)
             {
@@ -231,7 +233,9 @@ namespace LawsForImpact.ViewModels
                     ShowDate = true;
                     ShowSave = true;
 
-                    intervalChosen = 1000 * 60 * 60 * 24*3;
+                    // for debugging
+                    //intervalChosen = 6000;
+                    intervalChosen = 1000 * 60 * 60 * 24 * 3;
                 }
                 else
                 {

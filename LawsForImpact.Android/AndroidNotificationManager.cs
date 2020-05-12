@@ -61,7 +61,6 @@ namespace LawsForImpact.Droid
 
             CreateNotificationChannel();
 
-
         }
 
         public int ScheduleNotification(string title, string message)
@@ -118,7 +117,7 @@ namespace LawsForImpact.Droid
             savedInfo.RepeatInterval = repeatInterval;
             
             LoadData();
-            RepeatAlarmSet();
+            
 
             Log.Info("myapp", "saved info EXIT");
         }
@@ -138,17 +137,23 @@ namespace LawsForImpact.Droid
             var repInterval = notification.RepeatInterval;
 
             SavedInfo(queue, queueIndex, randTog, repInterval);
-            
+            RepeatAlarmSet(false);
             Log.Info("myapp", "on receive EXIT");
         }
 
 
-        public void RepeatAlarmSet()
+        public void RepeatAlarmSet(bool firstTime)
         {
             long time;
 
-            time = Global.selectedTime + Global.selectedDate;
-
+            if (firstTime)
+            {
+                time = Global.selectedTime + Global.selectedDate;
+            }
+            else
+            {
+                time = savedInfo.RepeatInterval + Calendar.GetInstance(Android.Icu.Util.TimeZone.Default).TimeInMillis;
+            }
             Log.Info("myapp", "repeat alarm enterred");
 
             Intent intent = new Intent(Application.Context, typeof(AndroidNotificationManager));
@@ -159,7 +164,7 @@ namespace LawsForImpact.Droid
 
             var pendingIntent = PendingIntent.GetBroadcast(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
             var alarmManager = GetAlarmManager();
-            alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, time + savedInfo.RepeatInterval, pendingIntent);
+            alarmManager.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, time, pendingIntent);
             Log.Info("myapp", "repeat alarm EXIT");
         }
 
