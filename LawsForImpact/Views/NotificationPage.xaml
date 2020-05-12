@@ -101,7 +101,7 @@
                 <Button Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding ShowSave}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
             </Grid>
                 <Grid Grid.Row="5">
-                    <Button Text="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding ShowSave}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
+                    <Button Text="Clear" Command="{Binding CancelCommand}" IsVisible="{Binding ShowSave}" FontSize="15" TextColor="Black" HorizontalOptions="FillAndExpand" BorderRadius="15"/>
                 </Grid>
             </StackLayout>
 

@@ -76,14 +76,21 @@ namespace LawsForImpact.Droid
             // 1 MainActivity intent allows MainActivity to change once notification tapped
             Intent intentMain = new Intent(AndroidApp.Context, typeof(MainActivity));
 
+
             intentMain.PutExtra(TableKey, currentTitle);
             intentMain.PutExtra(IndexKey, currentIndex);
 
+            TaskStackBuilder stackBuilder = TaskStackBuilder.Create(Application.Context);
+            stackBuilder.AddParentStack(Java.Lang.Class.FromType(typeof(MainActivity)));
+            stackBuilder.AddNextIntent(intentMain);
 
-            PendingIntent pendingIntentMain = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intentMain, PendingIntentFlags.UpdateCurrent);
+
+            //PendingIntent pendingIntentMain = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intentMain, PendingIntentFlags.UpdateCurrent);
+            PendingIntent pendingIntent = stackBuilder.GetPendingIntent(0, (int)PendingIntentFlags.UpdateCurrent);
+
             NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
-                .SetContentIntent(pendingIntentMain)
+                .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
                 .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.ic_mtrl_chip_checked_circle))
