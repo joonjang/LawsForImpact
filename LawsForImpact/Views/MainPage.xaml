@@ -9,7 +9,7 @@
 
     
     <TabbedPage.Children>
-        <NavigationPage Title="Today" BarBackgroundColor="DarkRed">
+        <NavigationPage Title="Today" BarBackgroundColor="Gray">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_feed.png"/>
@@ -20,7 +20,7 @@
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Browse" BarBackgroundColor="DarkRed">
+        <NavigationPage Title="Browse" BarBackgroundColor="Gray">
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_feed.png"/>
@@ -31,7 +31,7 @@
             </x:Arguments>
         </NavigationPage>
 
-        <NavigationPage Title="Notifcation" BarBackgroundColor="DarkRed">  <!--About-->
+        <NavigationPage Title="Notifcation" BarBackgroundColor="Gray">  <!--About-->
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="tab_about.png"/>

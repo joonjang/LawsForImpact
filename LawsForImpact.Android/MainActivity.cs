@@ -19,7 +19,7 @@ namespace LawsForImpact.Droid
     [Activity(
         LaunchMode = LaunchMode.SingleTop, 
         Label = "Influence",
-        Icon = "@mipmap/icon", 
+        Icon = "@drawable/check_logo", 
         Theme = "@style/MainTheme", 
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
