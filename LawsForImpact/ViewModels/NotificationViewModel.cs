@@ -72,6 +72,8 @@ namespace LawsForImpact.ViewModels
 
                 notificationManager.SavedInfo(nQueue, 0, RandomOn, intervalChosen);
                 notificationManager.RepeatAlarmSet(true);
+
+                App.Current.MainPage.DisplayAlert("Saved", "Scheduled notification reminder has been set. First notification has been fired as a test", "Ok");
             }
             catch(Exception e)
             {
@@ -97,6 +99,7 @@ namespace LawsForImpact.ViewModels
             MonthlyToggle = false;
 
             notificationManager.Cancel();
+            App.Current.MainPage.DisplayAlert("Cancelled", "Notification reminder has been cancelled", "Ok");
         }
 
         DateTime _selectedDate = DateTime.Today;

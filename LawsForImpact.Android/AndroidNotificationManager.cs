@@ -156,11 +156,19 @@ namespace LawsForImpact.Droid
             if (firstTime)
             {
                 time = Global.selectedTime + Global.selectedDate;
+
+                // an if statement inside an if statement if probably faux pas
+                if (time < Calendar.GetInstance(Android.Icu.Util.TimeZone.Default).TimeInMillis)
+                {
+                    // add 24 hours if date set is before current time
+                    time += 1000 * 60 * 60 * 24;
+                }
             }
             else
             {
                 time = savedInfo.RepeatInterval + Calendar.GetInstance(Android.Icu.Util.TimeZone.Default).TimeInMillis;
             }
+            
             Log.Info("myapp", "repeat alarm enterred");
 
             Intent intent = new Intent(Application.Context, typeof(AndroidNotificationManager));
